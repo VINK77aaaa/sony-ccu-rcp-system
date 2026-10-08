@@ -1,0 +1,67 @@
+[
+ {
+  "case_id": "o01-network-setup-task",
+  "prompt": "一台 RCP-3500，物理上只用 LAN 电缆与一台 CCU 一对一连接，不做多机操作。请给出：①应选哪个 CNS 模式；②需要配置哪些网络参数；③配置完成后必须做什么。",
+  "card_path": "references/capabilities/network-setup.md"
+ },
+ {
+  "case_id": "o02-mcs-operations-task",
+  "prompt": "MCS 系统里主设备 MSU 掉线了，几台面板的 PANEL ACTIVE 灯全灭，旋钮都拧不动。怎么恢复操作？",
+  "card_path": "references/capabilities/mcs-operations.md"
+ },
+ {
+  "case_id": "o03-led-diagnostics-task",
+  "prompt": "面板 CABLE 指示灯亮红色，NETWORK 常亮，ALARM 熄灭。请判读：故障在哪一层？CABLE 红代表什么？",
+  "card_path": "references/capabilities/led-diagnostics.md"
+ },
+ {
+  "case_id": "o04-daily-operation-task",
+  "prompt": "晨检：我要①对白色物体跑 AWB；②中止一个正在进行的 LEVEL 自动电平。请说明每一步操作后指示灯应该是什么状态才算做对。",
+  "card_path": "references/capabilities/daily-operation.md"
+ },
+ {
+  "case_id": "o05-engineer-mode-security-task",
+  "prompt": "接手一台二手 RCP-3500，前任设过安全代码但没人知道。请给出把旧代码删除的完整操作路径。",
+  "card_path": "references/capabilities/engineer-mode-security.md"
+ },
+ {
+  "case_id": "o06-white-black-balance-task",
+  "prompt": "操作员报：读完 3 号场景文件之后，BLACK 旋钮的刻度跟监视器黑位对不上了，是不是旋钮坏了？请判断并给出恢复办法。",
+  "card_path": "references/capabilities/white-black-balance.md"
+ },
+ {
+  "case_id": "o07-scene-files-task",
+  "prompt": "想把当前调色注册到场景文件 3 号，之后又想调回注册之前的状态。请给出两步操作与灯态判据。",
+  "card_path": "references/capabilities/scene-files.md"
+ },
+ {
+  "case_id": "o08-file-backup-task",
+  "prompt": "这台面板要换新，需要把配置完整导出到 U 盘。只导一次就够了吗？请说明要备哪几类、各自包含什么。",
+  "card_path": "references/capabilities/file-backup.md"
+ },
+ {
+  "case_id": "o09-specs-reference-task",
+  "prompt": "施工备料，请原样给出：①CCA-5 电缆最大连接长度；②LAN 电缆最大连接长度；③面板质量。",
+  "card_path": "references/capabilities/specs-reference.md"
+ },
+ {
+  "case_id": "o10-environment-care-task",
+  "prompt": "冬天面板从冷车搬到暖机房，外壳和屏幕起雾了。能直接开机吗？该怎么处理？",
+  "card_path": "references/capabilities/environment-care.md"
+ },
+ {
+  "case_id": "o11-customization-task",
+  "prompt": "把 GATE 分配到 F1 按钮，按流程改完，退出菜单后按 F1 却完全没反应。最可能的原因是什么？正确收尾怎么做？",
+  "card_path": "references/capabilities/customization.md"
+ },
+ {
+  "case_id": "o12-paint-adjustment-task",
+  "prompt": "人脸肤色偏红、看着发糙。Paint 菜单里该动哪个功能？给出第一步具体动作。",
+  "card_path": "references/capabilities/paint-adjustment.md"
+ },
+ {
+  "case_id": "o13-maintenance-correction-task",
+  "prompt": "G 通道 Black Shading 自动校正刚做完。要怎么保证结果在摄像机断电后不丢？",
+  "card_path": "references/capabilities/maintenance-correction.md"
+ }
+]

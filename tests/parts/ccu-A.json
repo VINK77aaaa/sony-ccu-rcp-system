@@ -1,0 +1,212 @@
+{
+  "trigger_cases": [
+    {
+      "case_id": "t14-ccu-transport-setup-trigger",
+      "prompt": "刚搬来一台 HDCU5000，要跟 HDC5000 摄像机对接，走光纤的话 SYSTEM CONFIG 里 CABLE TYPE 该选哪一项？大概能拉多远？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-transport-setup",
+      "forbidden_cards": ["ccu-system-format", "ccu-format-lookup", "system-integration"],
+      "notes": "问的是'通路怎么建'（CABLE TYPE 取值 + 选件 + 距离），正是本卡职责（A2 情境 1/2、E 段步骤 1-4）。近邻 ccu-system-format 管的是通路建好后'工作在哪一档频率/格式'（SYSTEM/CAMERA FORMAT），二者共享 FIBER TRANSMIT RATE：本卡判其取值依据，彼卡用其取值结果派生候选集；此处只问怎么接、能拉多远，不涉格式，故不选。ccu-format-lookup 回答'某接口能出什么格式'，与本问无关。system-integration 是 RCP+CCU+摄像机的整系统组网，范围过大。"
+    },
+    {
+      "case_id": "t15-ccu-system-format-trigger",
+      "prompt": "这台 HDCU3500 已经装了 HKCU-FB50，要做 4K，SYSTEM 该设 1.001(525) 还是 1.000(625)？CAMERA FORMAT 里有哪些能选？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-system-format",
+      "forbidden_cards": ["ccu-format-lookup", "ccu-transport-setup", "ccu-hdr-setup"],
+      "notes": "问的是'系统频率与摄像机格式该设成什么'，属本卡（A2 情境 1/2、E 段步骤 1-4）。近邻 ccu-format-lookup 只管'选好之后某接口出什么格式串'，问'该设什么格式'归本卡。ccu-transport-setup 管 CABLE TYPE 与选件/距离，虽然本问提到 FB50，但落点是 SYSTEM 与 CAMERA FORMAT 候选，不在彼卡。ccu-hdr-setup 管 HDR MODE/OETF/COLOR，本问未涉 HDR 参数。"
+    },
+    {
+      "case_id": "t16-ccu-format-lookup-trigger",
+      "prompt": "SDI-OUT3 这个口到底能出哪些格式？我想在画面上叠菜单字符，MONITOR 能改吗？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-format-lookup",
+      "forbidden_cards": ["ccu-system-format", "ccu-transport-setup", "ccu-trunk-prompter"],
+      "notes": "问的是'某接口能出什么格式串 + MONITOR 怎么设'，属本卡（A2 情境 1/4、E 段步骤 3-5）。近邻 ccu-system-format 管'该选哪个 SYSTEM/CAMERA FORMAT'；本问是选好之后的查表动作，故不选彼卡。ccu-transport-setup 不回答接口格式。ccu-trunk-prompter 只管 SDI-I/O 3/4 的 HD TRUNK / HD PROMPTER 信号功能选择，本问是 SDI-OUT3 的格式与 MONITOR，不归彼卡。"
+    },
+    {
+      "case_id": "t17-ccu-hdr-setup-trigger",
+      "prompt": "我想让这台摄像机同时出一路 HDR 一路 SDR，CCU 这边要怎么开？OETF 选 S-Log3 还是 HLG 好？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-hdr-setup",
+      "forbidden_cards": ["ccu-system-format", "ccu-format-lookup", "ccu-transport-setup"],
+      "notes": "问的是'开启 LIVE HDR + 设 HDR OETF'，属本卡（A2 情境 1/3、E 段步骤 3/6）。近邻 ccu-system-format 只负责 CAMERA FORMAT 里带 (4K/HDR)/(HDR/SDR) 标注项的选择，HDR MODE/OETF/COLOR 的设定归本卡。ccu-format-lookup 决定某口 OETF 填什么值，本卡决定这些值取 HDR 还是 SDR 的策略。ccu-transport-setup 管 4K/HDR 的选件门槛与通路，不涉 HDR 参数。"
+    },
+    {
+      "case_id": "t18-ccu-genlock-sync-trigger",
+      "prompt": "全 IP 演播室上电以后画面一直不同步，PTP 好像锁不上，域编号和通信模式在哪设？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-genlock-sync",
+      "forbidden_cards": ["ccu-network-setup", "ccu-ip-live", "ccu-web-menu"],
+      "notes": "问的是同步来源与 PTP 参数（GENLOCK MODE / DOMAIN NUMBER / COMMUNICATION MODE），属本卡（A2 情境 1/4、E 段步骤 3）。近邻 ccu-network-setup 管端口 IP 编址、链路速度、CNS 与 PING——PTP 走哪条 LAN 端口由本卡 N04 PORT 选，但该端口 IP/链路速度在彼卡设，同步锁不上时是'先回查彼卡 LAN1/LAN2 是否同速'的关联卡而非本问落点。ccu-ip-live 管 ST2110 流与 NMOS/Ember+/SNMP/TSL 协议（N06-N16），'ST2110 系统必须设 GENLOCK MODE=NETWORK'是两卡交界点，但本问要的是 PTP 域号与通信模式，归本卡。ccu-web-menu 只涉界面操作。"
+    },
+    {
+      "case_id": "t19-ccu-network-setup-trigger",
+      "prompt": "新机要接进 MCS 多机系统，LAN-COM 的 IP 和 CCU 编号在哪设？LAN1 和 LAN2 的速度是不是必须一样？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-network-setup",
+      "forbidden_cards": ["ccu-genlock-sync", "ccu-ip-live", "network-setup"],
+      "notes": "问的是端口 IP 编址、CNS 模式/CCU 编号、链路速度，属本卡（A2 情境 1/3、E 段步骤 2-4）。近邻 ccu-genlock-sync 管同步来源与 PTP 域号/相位，不涉编址与链路速度（'LAN1/LAN2 必须同速'正是本卡 N01 的硬约束）。ccu-ip-live 管 N06-N16 协议栈，本问未涉协议。RCP 侧 network-setup 是面板自身的组网与主设备 IP，本问对象是 CCU 主机侧。"
+    },
+    {
+      "case_id": "t20-ccu-ip-live-trigger",
+      "prompt": "要接 IP Live System Manager，主备地址和 HITLESS FAILOVER 在哪设？改完 PORT 是不是要重启？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-ip-live",
+      "forbidden_cards": ["ccu-network-setup", "ccu-genlock-sync", "ccu-web-menu"],
+      "notes": "问的是 IP Live（LSM）配置与'改 PORT 后重启'，属本卡（A2 情境 1/4/5、E 段步骤 2）。近邻 ccu-network-setup 管 N01/N02/N17 基础编址，本问是 N06 协议层。ccu-genlock-sync 管 PTP 同步（N04/N05），与 IP 流/协议（N06-N16）分属两卡。ccu-web-menu 管 N03 界面本身。"
+    },
+    {
+      "case_id": "t21-ccu-web-menu-trigger",
+      "prompt": "想用电脑远程看这台 CCU 的设置，浏览器打开后布局全乱了，是不是必须用特定浏览器？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-web-menu",
+      "forbidden_cards": ["ccu-network-setup", "ccu-ip-live", "ccu-menu-operation"],
+      "notes": "问的是 Web 菜单访问与浏览器兼容性（布局错乱），属本卡（A2 情境 4、E 段步骤 4/5）。近邻 ccu-network-setup 只提供 Web 访问所需的 LAN-COM IP 编址，不回答界面本身。ccu-ip-live 管 NMOS/Ember+/SNMP 等协议。ccu-menu-operation 管本机（OSD）菜单与菜单锁定等本机操作，Web 菜单是独立通路，归本卡。"
+    },
+    {
+      "case_id": "t22-ccu-file-log-trigger",
+      "prompt": "这台 CCU 主板坏了要换机，怎么把原来的设置搬到新机上？恢复完网络是不是就不通了？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-file-log",
+      "forbidden_cards": ["file-backup", "ccu-network-setup", "ccu-status-screen"],
+      "notes": "问的是 CCU 整机设置迁移（STORE/RECALL/EXPORT）与'恢复后网络不通'，属本卡（A2 情境 1、E 段步骤 2-5 与判停分支）。近邻 RCP 侧 file-backup 是面板的两类 USB 备份，对象与路径都不同——问'CCU 整机设置'归本卡。ccu-network-setup 负责'补配 LAN COM 的 IP'这一动作本身，本卡只负责提醒它不会被 RECALL 带回。ccu-status-screen 只把告警读出来、不落盘。"
+    }
+  ],
+  "output_cases": [
+    {
+      "case_id": "o14-ccu-transport-setup-task",
+      "prompt": "HDCU5000 用光纤复合缆连 HDC5000 摄像机，我要在 SYSTEM CONFIG 里设哪些菜单项？FIBER TRANSMIT RATE 有哪些取值？",
+      "card": "ccu-transport-setup",
+      "assertions": [
+        {"kind": "contains", "value": "FIBER CAMERA CABLE", "note": "CABLE TYPE 在光纤复合缆下的取值必须原样出现"},
+        {"kind": "contains", "value": "FIBER TRANSMIT RATE", "note": "光纤路径的必配第二项"},
+        {"kind": "contains", "value": "CAMERA I/F", "note": "菜单路径落在 SYSTEM CONFIG 的 <CAMERA I/F> 页"},
+        {"kind": "contains", "value": "ULTRA", "note": "FIBER TRANSMIT RATE 取值之一"},
+        {"kind": "contains", "value": "HIGH", "note": "FIBER TRANSMIT RATE 取值之一"}
+      ],
+      "notes": "真值来源：E 段步骤 5（设 CABLE TYPE 与 FIBER TRANSMIT RATE）与 R 段第 4 页脚注 a（`SYSTEM CONFIG t <CAMERA I/F> t CABLE TYPE t FIBER CAMERA CABLE`）、第 29 页 S01（FIBER TRANSMIT RATE：HIGH、ULTRA、---）。"
+    },
+    {
+      "case_id": "o15-ccu-system-format-task",
+      "prompt": "SYSTEM 设成 1.001(525)、FIBER TRANSMIT RATE 设成 ULTRA 时，CAMERA FORMAT 能选哪些格式？其中哪些能启用 BIT DEPTH，取值是什么？",
+      "card": "ccu-system-format",
+      "assertions": [
+        {"kind": "contains", "value": "3840×2160/59.94P", "note": "ULTRA×1.001(525) 候选清单中的原生 4K 格式串，须原样出现"},
+        {"kind": "contains", "value": "1080/59.94I (RGB444)", "note": "候选清单中的 RGB444 项，BIT DEPTH 的使能条件"},
+        {"kind": "contains", "value": "10BIT", "note": "BIT DEPTH 取值之一"},
+        {"kind": "contains", "value": "12BIT", "note": "BIT DEPTH 取值之一"}
+      ],
+      "notes": "真值来源：R 段第 33 页 S05（FIBER TRANSMIT RATE=ULTRA 且 SYSTEM=1.001(525) 时的 CAMERA FORMAT 15 项清单，含 `3840×2160/59.94P`、`1080/59.94I (RGB444)`）与第 34 页 S05（BIT DEPTH：`10BIT`/`12BIT`，仅六个 (RGB444) 格式可选）。"
+    },
+    {
+      "case_id": "o16-ccu-format-lookup-task",
+      "prompt": "FIBER TRANSMIT RATE=HIGH、SYSTEM=1.001(525)、CAMERA FORMAT=1080/59.94P，SDI-OUT3/4 能出哪些格式串？要查哪一页？",
+      "card": "ccu-format-lookup",
+      "assertions": [
+        {"kind": "contains", "value": "1080/59.94P/3G-A", "note": "该行 SDI-OUT3/4 列读出的格式串之一"},
+        {"kind": "contains", "value": "1080/59.94P/3G-B", "note": "该行 SDI-OUT3/4 列读出的格式串之一"},
+        {"kind": "contains", "value": "525/59.94I", "note": "该行 SDI-OUT3/4 列读出的格式串之一"},
+        {"kind": "regex", "value": "第\\s*54\\s*页", "note": "(HIGH,1.001(525)) 选页规则指向第 54 页"}
+      ],
+      "notes": "真值来源：A1 段示例 1（第 54 页 HIGH×1.001(525) 输出表 SDI-OUT3/4 列）与 R 段第 36 页 S07、I 段第二步选页规则（HIGH×1.001(525)→第 54 页）。"
+    },
+    {
+      "case_id": "o17-ccu-hdr-setup-task",
+      "prompt": "摄像机支持 Live HDR，我要在 CCU 上开 LIVE HDR，HDR OETF 和色彩空间怎么设？4K COLOR SPACE 能单独改吗？",
+      "card": "ccu-hdr-setup",
+      "assertions": [
+        {"kind": "contains", "value": "LIVE HDR", "note": "HDR MODE 的取值"},
+        {"kind": "contains", "value": "S-Log3", "note": "HDR OETF 取值之一"},
+        {"kind": "contains", "value": "HLG", "note": "HDR OETF 取值之一"},
+        {"kind": "contains", "value": "BT2020", "note": "HDR COLOR SPACE 取值之一"},
+        {"kind": "contains", "value": "4K COLOR SPACE", "note": "LIVE HDR 下强制跟随 HDR COLOR SPACE 的项"}
+      ],
+      "notes": "真值来源：R 段第 35 页 S06（HDR MODE：`OFF`/`LIVE HDR`；HDR OETF：`S-Log3`/`HLG`；HDR COLOR SPACE：`BT709`/`BT2020`；4K COLOR SPACE 在 LIVE HDR 时'设置与 HDR COLOR SPACE 相同'）与 E 段步骤 3/6/8。"
+    },
+    {
+      "case_id": "o17b-ccu-hdr-setup-boundary",
+      "prompt": "LIVE HDR 模式下 HDR 输出到底不支持哪些绘制功能？给我一份具体清单。",
+      "card": "ccu-hdr-setup",
+      "assertions": [
+        {"kind": "regex", "value": "未(列明|说明|给出)|不(编造|臆造|能给出)|留白|无法(给出|确认|列明)", "note": "手册只写'HDR 输出不支持某些绘制功能'，未列明具体项，应停止并声明缺口"},
+        {"kind": "contains", "value": "LIVE HDR", "note": "缺口声明须挂在 LIVE HDR 语境下"}
+      ],
+      "notes": "边界用例。真值来源：B 段'手册警告的失败模式'与'作者盲点'——第 35 页 ce23 原文'选择 LIVE HDR 时…HDR 输出不支持某些绘制功能'，但手册未列明具体缺哪些，卡明确'本卡不编造清单'。"
+    },
+    {
+      "case_id": "o18-ccu-genlock-sync-task",
+      "prompt": "ST2110 系统要用 NETWORK 同步，PTP 的域编号、通信模式、延迟请求间隔怎么配？锁定状态有哪几种？",
+      "card": "ccu-genlock-sync",
+      "assertions": [
+        {"kind": "contains", "value": "ST2059-2", "note": "PROFILE 唯一支持的配置文件"},
+        {"kind": "contains", "value": "DOMAIN NUMBER", "note": "域编号项名"},
+        {"kind": "contains", "value": "MIXED MODE", "note": "COMMUNICATION MODE 取值之一"},
+        {"kind": "contains", "value": "NO MASTER", "note": "N04 LOCK STATUS 四态之一"},
+        {"kind": "contains", "value": "LOCKED", "note": "N04 LOCK STATUS 终态"}
+      ],
+      "notes": "真值来源：R 段第 80 页（`NETWORK GENLOCK`：`PROFILE ST2059-2`、`DOMAIN NUMBER 0 至 127`、`COMMUNICATION MODE` 的 `MULTICAST MODE`/`MIXED MODE`、`DELAY REQUEST INTERVAL –7 至 –1`；N04 `LOCK STATUS`：`NOT IN USE`/`NO MASTER`/`LOCKING`/`LOCKED`）与 E 段步骤 3c/3d/3e。"
+    },
+    {
+      "case_id": "o19-ccu-network-setup-task",
+      "prompt": "给 CCU 的 LAN1/LAN2 配 IP 和链路速度，LINK SPEED 和 25G FEC 有哪些取值？改完怎么确认生效？",
+      "card": "ccu-network-setup",
+      "assertions": [
+        {"kind": "contains", "value": "LINK SPEED", "note": "链路速度项名"},
+        {"kind": "contains", "value": "25G", "note": "LINK SPEED 取值之一（10G/25G）"},
+        {"kind": "contains", "value": "RS-FEC(CL108)", "note": "25G FEC 取值之一"},
+        {"kind": "contains", "value": "FC-FEC(CL74)", "note": "25G FEC 取值之一"},
+        {"kind": "contains", "value": "SET OK?", "note": "SET 为两段式执行，须再次按 ENTER 确认"}
+      ],
+      "notes": "真值来源：R 段第 79 页 N01（`LINK SPEED 10G、25G`；`25G FEC OFF、RS-FEC(CL108)、FC-FEC(CL74)`）与 E 段步骤 3a/3b、补充段'`SET` 是两段式执行——先显示 `SET OK?`，再次按 ENTER 才生效'。"
+    },
+    {
+      "case_id": "o20-ccu-ip-live-task",
+      "prompt": "现场要接 NMOS 控制器，为什么 NMOS 的 PORT 选不了？另外 Ember+、TSL UMD、NMOS IS-04/IS-05、RDS 各自的端口号是多少？",
+      "card": "ccu-ip-live",
+      "assertions": [
+        {"kind": "contains", "value": "3001", "note": "NMOS IS-04 NODE 端口号默认值"},
+        {"kind": "contains", "value": "3002", "note": "NMOS IS-05 CONNECTION 端口号默认值"},
+        {"kind": "contains", "value": "18235", "note": "RDS PORT NUMBER 默认值"},
+        {"kind": "contains", "value": "9000", "note": "Ember+ 的 TCP 端口号"},
+        {"kind": "contains", "value": "8900", "note": "TSL UMD 的 UDP 端口号"}
+      ],
+      "notes": "真值来源：R 段第 82 页 N07（`PORT NUMBER (IS-04 NODE) … 3001`、`PORT NUMBER (IS-05 CONNECTION) … 3002`、`RDS PORT NUMBER … 18235`；且 NMOS `PORT` 仅当 IP Live `PORT` 设为 DISABLE 时才能选——即'选不了'的原因）、第 84 页 N13/N14（Ember+ TCP `9000`、TSL UMD UDP `8900`）。"
+    },
+    {
+      "case_id": "o21-ccu-web-menu-task",
+      "prompt": "怎么启用 Web 菜单、用哪个浏览器、SERVICE DISCOVERY 怎么设？能连上但改不动是什么原因？",
+      "card": "ccu-web-menu",
+      "assertions": [
+        {"kind": "contains", "value": "Chrome", "note": "手册建议使用的浏览器"},
+        {"kind": "contains", "value": "WEB MENU", "note": "N03 的启用项名"},
+        {"kind": "contains", "value": "SERVICE DISCOVERY", "note": "N03 的 CCU 列表开关项名"},
+        {"kind": "regex", "value": "菜单锁定", "note": "'连上但改不动'的根因：菜单锁定开关 ON 时无法用 Web 菜单配置本机"},
+        {"kind": "contains", "value": "log.zip", "note": "f 按钮 Save Log 下载的日志文件名"}
+      ],
+      "notes": "真值来源：R 段第 20 页（'建议使用 Chrome'）、第 21 页（'当本机的菜单锁定开关处于 ON 位置时, 无法使用Web 菜单配置本机。'）、第 80 页 N03（`WEB MENU ENABLE、DISABLE`、`SERVICE DISCOVERY`）与 I 段 f 按钮清单（`Save Log`→`log.zip`）、E 段步骤 2/5。"
+    },
+    {
+      "case_id": "o22-ccu-file-log-task",
+      "prompt": "把 CCU 文件导出到 U 盘，路径是什么？RECALL 会不会把 LAN COM 的 IP 一起恢复？日志最多能存多久？",
+      "card": "ccu-file-log",
+      "assertions": [
+        {"kind": "contains", "value": "/MSSONY/PRO/CAMERA/HDCU5000", "note": "USB 导出/导入的固定路径，须原样出现"},
+        {"kind": "regex", "value": "不(会|含|包括|加载).{0,30}(LAN\\s*COM|IP|网络)", "note": "RECALL 不加载 LAN COM 的 IP/子网/网关"},
+        {"kind": "regex", "value": "30\\s*天", "note": "日志最多保存 30 天，超期从最旧删"},
+        {"kind": "regex", "value": "五个|1\\s*至\\s*5|1至5", "note": "本机最多可保存五个 CCU 文件（FILE INDEX 1 至 5）"}
+      ],
+      "notes": "真值来源：R 段第 78 页（`EXPORT TO USB … 路径为 \"/MSSONY/PRO/CAMERA/HDCU5000\"`；`使用 RECALL 不会加载 LAN COM 接口的 IP 地址、子网掩码和默认网关设置`；`LOG … 日志最多保存 30 天`；`STORE … 本机最多可保存五个 CCU 文件`）与 B 段 ce29。"
+    },
+    {
+      "case_id": "o22b-ccu-file-log-boundary",
+      "prompt": "CCU 文件能不能跨型号恢复？从旧机导到新机导入失败了，排查步骤是什么？",
+      "card": "ccu-file-log",
+      "assertions": [
+        {"kind": "regex", "value": "未(说明|展开|给出)|留白|不编造|无法(给出|确认|说明)", "note": "手册未说明跨型号/跨固件兼容性，也未给 RECALL 失败的排查步骤，应停止并声明缺口"},
+        {"kind": "contains", "value": "CCU 文件", "note": "缺口声明须挂在 CCU 文件语境下"}
+      ],
+      "notes": "边界用例。真值来源：B 段'诚实留白'——'手册未说明 CCU 文件的跨型号/跨固件兼容性，也未给出 RECALL 失败时的排查步骤；导入导出失败的原因（U 盘格式、路径、容量）原书均未展开。遇此类情况应如实告知留白，不编造处置。'"
+    }
+  ]
+}

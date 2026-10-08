@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "requested": "single",
+  "selected": "single",
+  "decision_policy": "single-first-v1",
+  "skill_budget": 8,
+  "promoted_count": 7,
+  "capability_count": 31,
+  "reasons": [
+    "用户显式选择 single，auto 决策器不覆盖用户选择"
+  ],
+  "alternative": "compact pack（1 个来源路由入口 + 7 个晋级 Skill，共 8 个可发现入口）",
+  "user_confirmed": true,
+  "preserve_strategy_on_update": true
+}

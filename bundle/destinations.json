@@ -1,0 +1,44 @@
+{
+  "generated_by": "stage-1.6 promotion gate (merged bundle: RCP-3500/3501 + HDCU5000/5500/3500)",
+  "output_mode": "single",
+  "entry": "sony-ccu-rcp-system",
+  "promoted_to": {
+    "cap.rcp-3500.network-setup": "network-setup",
+    "cap.rcp-3500.mcs-operations": "mcs-operations",
+    "cap.rcp-3500.led-diagnostics": "led-diagnostics",
+    "cap.rcp-3500.daily-operation": "daily-operation",
+    "cap.rcp-3500.engineer-mode-security": "engineer-mode-security",
+    "cap.hdcu.transport-setup": "ccu-transport-setup",
+    "cap.system.troubleshooting": "system-troubleshooting"
+  },
+  "served_by": {
+    "cap.rcp-3500.specs-reference": "sony-ccu-rcp-system",
+    "cap.rcp-3500.environment-care": "sony-ccu-rcp-system",
+    "cap.rcp-3500.white-black-balance": "sony-ccu-rcp-system",
+    "cap.rcp-3500.scene-files": "sony-ccu-rcp-system",
+    "cap.rcp-3500.file-backup": "sony-ccu-rcp-system",
+    "cap.rcp-3500.customization": "sony-ccu-rcp-system",
+    "cap.rcp-3500.paint-adjustment": "sony-ccu-rcp-system",
+    "cap.rcp-3500.maintenance-correction": "sony-ccu-rcp-system",
+    "cap.hdcu.system-format": "sony-ccu-rcp-system",
+    "cap.hdcu.format-lookup": "sony-ccu-rcp-system",
+    "cap.hdcu.hdr-setup": "sony-ccu-rcp-system",
+    "cap.hdcu.genlock-sync": "sony-ccu-rcp-system",
+    "cap.hdcu.network-setup": "sony-ccu-rcp-system",
+    "cap.hdcu.ip-live": "sony-ccu-rcp-system",
+    "cap.hdcu.web-menu": "sony-ccu-rcp-system",
+    "cap.hdcu.file-log": "sony-ccu-rcp-system",
+    "cap.hdcu.panel-diagnostics": "sony-ccu-rcp-system",
+    "cap.hdcu.status-screen": "sony-ccu-rcp-system",
+    "cap.hdcu.diagnosis-menu": "sony-ccu-rcp-system",
+    "cap.hdcu.audio-intercom": "sony-ccu-rcp-system",
+    "cap.hdcu.trunk-prompter": "sony-ccu-rcp-system",
+    "cap.hdcu.menu-operation": "sony-ccu-rcp-system",
+    "cap.hdcu.specs-reference": "sony-ccu-rcp-system",
+    "cap.system.integration": "sony-ccu-rcp-system"
+  },
+  "budget": {
+    "discoverable_entries": 8,
+    "limit": 8
+  }
+}

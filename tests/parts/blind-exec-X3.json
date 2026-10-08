@@ -1,0 +1,52 @@
+[
+ {
+  "case_id": "o23-ccu-panel-diagnostics-task",
+  "prompt": "CCU 前面板 CABLE ALARM 灯亮起时，对摄像机供电有什么影响？OPEN 和 SHORT 分别是什么意思？",
+  "card_path": "references/capabilities/ccu-panel-diagnostics.md"
+ },
+ {
+  "case_id": "o24-ccu-status-screen-task",
+  "prompt": "状态画面用 SDI OUT 3 接监视器时看不到画面，要先把哪个菜单项设成什么？进入和翻页分别用哪个控件？",
+  "card_path": "references/capabilities/ccu-status-screen.md"
+ },
+ {
+  "case_id": "o25-ccu-diagnosis-menu-task",
+  "prompt": "帮我把 HDCU5000 的 DIAGNOSIS 过一遍：风扇状态页（D06）在 HDCU5000 上会有哪些项？累计开机时间最多能显示到多少？",
+  "card_path": "references/capabilities/ccu-diagnosis-menu.md"
+ },
+ {
+  "case_id": "o26-ccu-audio-intercom-task",
+  "prompt": "生产商对讲线路选了 4WIRE，为什么 SIDE TONE CANCEL 和 TERMINATION 改不了？另外如果换成碳素麦克风，增益应该按多少？",
+  "card_path": "references/capabilities/ccu-audio-intercom.md"
+ },
+ {
+  "case_id": "o27-ccu-trunk-prompter-task",
+  "prompt": "HDCU5000 上用了 SDI-RET，为什么 HD PROMPTER 是灰的、显示 DISABLE？另外 FIBER TRANSMIT RATE 设成 ULTRA 后 NETWORK TRUNK 为什么改不动？",
+  "card_path": "references/capabilities/ccu-trunk-prompter.md"
+ },
+ {
+  "case_id": "o28-ccu-menu-operation-task",
+  "prompt": "CCU 前面板菜单按不动怎么排查？另外想在菜单里输入字符串（比如 BAR CHARACTER），这个输入流程是什么？",
+  "card_path": "references/capabilities/ccu-menu-operation.md"
+ },
+ {
+  "case_id": "o29-ccu-specs-reference-task",
+  "prompt": "HDCU5500 的电源要求、电流消耗、工作温度和质量分别是多少？HKCU-SFP50 的功耗又是多少？",
+  "card_path": "references/capabilities/ccu-specs-reference.md"
+ },
+ {
+  "case_id": "o30-system-integration-task",
+  "prompt": "RCP 面板 + CCU 主机 + 摄像机整系统投运，两端的 CNS 模式和编号/IP 要怎么核对？改完 CNS 之后要重启什么？",
+  "card_path": "references/capabilities/system-integration.md"
+ },
+ {
+  "case_id": "o31-system-troubleshooting-task",
+  "prompt": "面板上的 NETWORK 灯在闪，CCU 前面板的 NETWORK 灯也在闪——这俩含义一样吗？帮我判断故障到底出在哪一段。",
+  "card_path": "references/capabilities/system-troubleshooting.md"
+ },
+ {
+  "case_id": "o31b-system-troubleshooting-boundary",
+  "prompt": "CCU 报 CCU:PS CABLE SHORT，请给出完整的修复步骤。",
+  "card_path": "references/capabilities/system-troubleshooting.md"
+ }
+]

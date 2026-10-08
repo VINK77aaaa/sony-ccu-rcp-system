@@ -1,0 +1,114 @@
+[
+ {
+  "case_id": "o21-ccu-web-menu-task",
+  "removed": {
+   "kind": "contains",
+   "value": "log.zip",
+   "note": "f 按钮 Save Log 下载的日志文件名"
+  },
+  "replaced_by": {
+   "kind": "contains",
+   "value": "LAN-COM",
+   "note": "启用 Web 菜单时 PORT 固定走 LAN-COM（N03，第 80 页）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o22-ccu-file-log-task",
+  "removed": {
+   "kind": "regex",
+   "value": "五个|1\\s*至\\s*5|1至5",
+   "note": "本机最多可保存五个 CCU 文件（FILE INDEX 1 至 5）"
+  },
+  "replaced_by": {
+   "kind": "contains",
+   "value": "EXPORT TO USB",
+   "note": "提示问的是「导出到 U 盘」，对应 EXPORT TO USB（第 78 页）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o27-ccu-trunk-prompter-task",
+  "removed": {
+   "kind": "contains",
+   "value": "SDI-I/O4",
+   "note": "HD PROMPTER 的 SOURCE 之一"
+  },
+  "replaced_by": {
+   "kind": "regex",
+   "value": "固定|强制",
+   "note": "提示问「为什么改不动/变灰」，答案是固定值规则（第 75 页 M02）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o30-system-integration-task",
+  "removed": {
+   "kind": "contains",
+   "value": "CCA-5",
+   "note": "面板↔CCU 控制链电缆名"
+  },
+  "replaced_by": {
+   "kind": "contains",
+   "value": "MASTER IP ADDRESS",
+   "note": "提示问两端 IP 核对，CCU 侧对应项为 MASTER IP ADDRESS（第 79 页 N02）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o30-system-integration-task",
+  "removed": {
+   "kind": "contains",
+   "value": "200 m",
+   "note": "CCA-5 最大连接长度，原样"
+  },
+  "replaced_by": {
+   "kind": "regex",
+   "value": "1\\s*至\\s*96|A\\s*至\\s*Z",
+   "note": "提示问编号核对，取值域是核对要点（第 79 页 N02）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o31-system-troubleshooting-task",
+  "removed": {
+   "kind": "contains",
+   "value": "CABLE ALARM",
+   "note": "主机侧链路/供电层灯名"
+  },
+  "replaced_by": {
+   "kind": "contains",
+   "value": "LEGACY",
+   "note": "提示专问 NETWORK 灯；LEGACY 下面板 NETWORK 熄灭属正常，是同一灯语边界（RCP 第 15 页）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o31-system-troubleshooting-task",
+  "removed": {
+   "kind": "contains",
+   "value": "CABLE CONDITION",
+   "note": "主机侧接收电平四级灯名"
+  },
+  "replaced_by": {
+   "kind": "regex",
+   "value": "状态画面|Network\\s*页",
+   "note": "提示问「故障出在哪一段」，下一步指向状态画面 Network 页（CCU 第 16-17 页）"
+  },
+  "reason": "原断言内容确实在能力卡中（已核对），但 prompt 并未提问该项 —— 属测试设计缺陷（断言超出提问范围），按 methodology/06 §110 修测试并留审计。"
+ },
+ {
+  "case_id": "o34-ccu-trunk-prompter-source",
+  "removed": {
+   "kind": "regex",
+   "value": "1\\.5G[\\s、,，/]*3G[\\s、,，/]*6G[\\s、,，/]*12G",
+   "note": "UHD PROMPTER DATA RATE 四档原样"
+  },
+  "replaced_by": {
+   "kind": "regex",
+   "value": "1\\.5G.{0,12}3G.{0,12}6G.{0,12}12G",
+   "note": "同上，放宽分隔符"
+  },
+  "reason": "原断言的字符类未覆盖反引号 —— 盲测答案写作 \"`1.5G`、`3G`、`6G`、`12G`\"（内容正确）却被判失败，属测试设计缺陷（格式容差过严）。按 methodology/06 §110 修测试并留审计。"
+ }
+]

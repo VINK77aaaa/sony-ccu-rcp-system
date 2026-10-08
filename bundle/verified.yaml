@@ -1,0 +1,1689 @@
+schema_version: 1
+bundle_id: bundle.sony-ccu-rcp-system
+book:
+  title: Sony 摄像机控制系统使用说明书合辑（RCP-3500/3501 遥控面板 + HDCU5000/5500/3500 摄像机控制单元）
+  author: Sony Corporation
+  source_pack: sony-rcp-3500-3501-manual-2019 + sony-hdcu-5000-5500-3500-manual-2019
+  baseline_tag: cangjie-v2.5.0
+entry:
+  name: sony-ccu-rcp-system
+  description: 'Sony 摄像机控制系统（RCP-3500/3501 遥控面板 + HDCU5000/5500/3500 摄像机控制单元）的统一技能入口，蒸馏自 Sony 2019 两本官方使用说明书。覆盖 31 项能力：RCP 侧 13 项（组网连接、MCS 多机仲裁、面板灯语诊断、摄像机日常操作、工程师模式与安全代码、白黑闪光平衡、场景文件、USB 备份、自定义、Paint 图像调整、维护校正、规格速查、环境红线）+ CCU 侧 16 项（传输方式决策、系统格式、输出/返回格式派生查表、HDR、同步 GENLOCK-PTP、网络与 IP、IP Live/NMOS/第三方协议、Web 菜单、CCU 文件与日志、前面板灯语诊断、状态画面判读、DIAGNOSIS 硬件诊断、音频与对讲、干线提示机、本机菜单操作、接口规格环境速查）+ 跨书 2 项（整系统组网与联调、整系统联合排障）。按用户意图路由到对应能力卡执行。'
+  core_principles:
+  - 数值与格式串零改写：规格、接口、格式串、页码、代码一律原样回报，禁止换算或四舍五入
+  - 先定层级再动手：系统级问题先判"面板侧 / 主机侧 / 链路侧"，再进对应能力卡
+  - 两端一致性：RCP 与 CCU 的 CNS 模式、CCU 编号、主设备 IP 必须一致且全系统唯一
+  - 前置条件链：传输方式 → 系统格式 → 输出/返回格式是派生链，越级设定必然失败
+  - 选件门槛先核：菜单项是否存在取决于是否安装 HKCU-SFP50/SDI50/SM50 或 HZCU-UHD35/CNFG50/SNMP50
+  - 手册留白诚实转介：多处"请联系 Sony 维修代表或销售代表"，未载内容标注缺口不编造
+  - 不可逆操作先警示：改 CNS 需重启所有摄像机系统；改 DATE&TIME 会清空全部日志
+  out_of_scope:
+  - 摄像机（HDC 系列）自身的维修与固件升级操作
+  - 选件板（HKCU-* / HZCU-*）的物理安装步骤（手册明示仅经培训人员可执行）
+  - 其他型号遥控面板或 CCU 的专属操作
+  - 书摘/读后感/作者人设扮演
+  stop_conditions:
+  - 用户未提供所连设备型号或选件安装情况，而该信息影响菜单项存在性时，先询问再执行
+  - 需要给出手册未载的处置步骤或参数数值时（如 SFP+ 模块兼容清单、电源电压切换方法、CABLE ALARM SHORT 处置），停止并声明缺口
+  - 安全关键数值或格式串与手册原文冲突时，以原文为准并停止改写
+  - 涉及第 67 页 HFR↔BNC Link 编配表（已知文本提取缺口）时，声明依据不完整
+router_entry:
+  name: sony-ccu-rcp-system-router
+  description: 'Sony 摄像机控制系统技能的来源路由入口：按用户意图（RCP 面板侧 / CCU 主机侧 / 跨两端整系统）从 31 张能力卡中路由到对应能力并执行；未晋级为独立 Skill 的能力全部经此入口可达。'
+promotion_budget: 8
+capabilities:
+- capability_id: cap.rcp-3500.network-setup
+  revision: 1
+  status: active
+  slug: network-setup
+  title: 组网连接与配置
+  importance: critical
+  importance_rationale: 映射 task-01（首次安装选定组网模式并完成连接设定）/task-02（接地判断）——原书任务清单标注 "安装是其余一切的前提；配错需重启全系统"。遗漏后果：模式选错或 IP/RCP 编号重叠导致整系统不通 （ce13/ce14），改 CNS 不重启所有摄像机系统则新旧拓扑混杂（ce07），纯 LAN 不接地有安全风险（ce15）。
+  one_liner: 先按物理连线四选一定 CNS（只用 CCA-5→LEGACY；LAN 一对一→BRIDGE；混合拓扑/多机→MCS；HZC-RCP5→PC 控制），配置在工程师模式完成，编号与 IP 全系统唯一，更改 CNS 后必须重启所有摄像机系统。
+  intents:
+  - 把 RCP 接入摄像机系统并选定组网模式（LEGACY/BRIDGE/MCS/PC 控制）
+  - 配置面板 TCP/IP、目标 IP、主设备 IP 与 RCP 编号
+  - 判断安装是否需要接地、布线是否合规格
+  - 组网变更后按铁律收尾投用（重启所有摄像机系统）
+  - 规划 MCS/PC 控制的 IP 编址与编号唯一性
+  keywords:
+  - 组网
+  - 连接模式
+  - CNS
+  - LEGACY
+  - BRIDGE
+  - MCS
+  - IP 地址
+  - RCP 编号
+  - 接地
+  - CCA-5
+  - network setup
+  - grounding
+  card: cards/network-setup.md
+  frontmatter:
+    description: '何时用: 新装/搬迁面板接入摄像机系统、选组网模式（LEGACY/BRIDGE/MCS/PC 控制）、配 IP 与
+
+      RCP 编号、判断是否接地、布线检查或组网变更后投用。触发词: 组网、连接、CNS、IP、RCP 编号、
+
+      接地、network setup。何时不用: 控制权仲裁（激活/PARA）用 mcs-operations；
+
+      灯语判读用 led-diagnostics；纯数值速查用 specs-reference。核心: CCA-5→LEGACY，LAN 一对一→
+
+      BRIDGE，混合/多机→MCS；编号 IP 全系统唯一；更改 CNS 后必须重启所有摄像机系统。
+
+      '
+    tags:
+    - decision
+    - procedure
+    - network
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 3-7 页、第 15-20 页
+  also_read:
+  - mcs-operations
+  - engineer-mode-security
+  - led-diagnostics
+  - specs-reference
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 安装前提，跨场景复用最高
+- capability_id: cap.rcp-3500.mcs-operations
+  revision: 1
+  status: active
+  slug: mcs-operations
+  title: MCS 多机操作仲裁
+  importance: high
+  importance_rationale: 映射 task-15（MCS 多机协同规则：激活/PARA/IRIS-MB/RCP Assign）——原书任务清单标注"多机位演播必备； 主设备断开时强制激活是冷知识"。遗漏后果：主设备断开后全场常规激活失效、无法操作（ce12）； 误按 PARA/误设主从导致并行无效或功能不工作（ce09/ce10）。
+  one_liner: 面板能不能动先看灯——PANEL ACTIVE 亮才有整机操作权（全系统仅一台），IRIS/MB ACTIVE 独占光圈/主黑，PARA 是并行通道（IRIS/MB 激活时禁用），主设备断开时长按 PANEL ACTIVE 强制激活。
+  intents:
+  - 判断"面板能看到值但拧不动"的原因并取得控制权
+  - 多面板并行控制同一摄像机（PARA）
+  - 独占或切换光圈/主黑电平控制（IRIS/MB ACTIVE）
+  - 用 RCP Assign 更换本面板受控摄像机
+  - 主设备（MSU/CNA-1）断开后的应急操作（强制激活）
+  - 判断主/从白平衡是否可用及冲突归属
+  keywords:
+  - MCS
+  - 多机
+  - 面板激活
+  - PANEL ACTIVE
+  - PARA
+  - 并行控制
+  - IRIS MB ACTIVE
+  - RCP Assign
+  - 主设备
+  - 强制激活
+  - 主从白平衡
+  - multi-camera
+  card: cards/mcs-operations.md
+  frontmatter:
+    description: '何时用: MCS 多机系统中面板能看到值但拧不动、多操作员并行控制、光圈/主黑电平抢控制权、主设备
+
+      （MSU/CNA-1）断开后全场无控制权、RCP Assign 换控机位、CNU 旧有连接的主/从白平衡。触发词:
+
+      激活、PANEL ACTIVE、PARA、并行控制、IRIS/MB ACTIVE、RCP Assign、强制激活、panel
+
+      active。何时不用: 配置 MCS 组网用 network-setup；灯语判读用
+
+      led-diagnostics；单机画质控制用 daily-operation。核心: 仅激活面板可操作；主设备断开时长按
+
+      PANEL ACTIVE 强制激活。
+
+      '
+    tags:
+    - decision
+    - procedure
+    - multi-camera
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 7-8 页、第 10 页、第 14-15 页、第 47-49 页
+  also_read:
+  - network-setup
+  - daily-operation
+  - white-black-balance
+  - customization
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 多机仲裁意图独立且高频
+- capability_id: cap.rcp-3500.led-diagnostics
+  revision: 1
+  status: active
+  slug: led-diagnostics
+  title: 指示灯灯语诊断
+  importance: critical
+  importance_rationale: 映射 task-08（看灯识故障：NETWORK/ALARM/CABLE）/task-03（CAM PW 供电判断）——原书任务清单与 优先级排序均列第一（"排障第一入口；表格型知识易翻错"）。遗漏后果：误判供电/灯语为设备故障导致 误报修或停播（ce08/ce12/ce34），把 LEGACY 正常态与权限态当故障（f11/f12 判读边界）。
+  one_liner: 先分层再查表——CAM PW 管电源、NETWORK 管本机与控制设备、CABLE 管摄像机与 CCU 链路、ALARM 管设备错误；状态与含义原样成对判读，报故障前先排除 LEGACY 正常态、权限态与坏点白点。
+  intents:
+  - 判读指示灯状态含义（CAM PW/NETWORK/ALARM/CABLE）
+  - 从面板给摄像机供电/断电并判断供电状态
+  - 定位故障层级（电源/网络/链路/设备）
+  - 甄别伪故障（LEGACY 正常态、权限态、兼容性、坏点白点）
+  - 处理"监视器一直出彩条"类信号输出异常（BARS 优先）
+  keywords:
+  - 灯语
+  - 指示灯
+  - NETWORK
+  - ALARM
+  - CABLE
+  - CAM PW
+  - 排障
+  - 供电
+  - 报警
+  - 闪烁
+  - indicator
+  - troubleshooting
+  card: cards/led-diagnostics.md
+  frontmatter:
+    description: '何时用: 面板或系统不对劲的第一入口——指示灯判读（CAM PW/NETWORK/ALARM/CABLE）、摄像机供电
+
+      状态判断、面板拧了没反应的权限态/故障态甄别、亮点白点要不要报修、监视器一直出彩条。触发词:
+
+      灯闪、灯语、指示灯、CAM PW、NETWORK、ALARM、CABLE、报警、连不上、blinking light、no signal。
+
+      何时不用: 改组网配置用 network-setup；取得控制权用 mcs-operations；白点校正操作用
+
+      maintenance-correction。核心: 先分层再查表，状态→含义原样判读，处置按层级转介。
+
+      '
+    tags:
+    - troubleshooting
+    - reference
+    - checklist
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 3 页、第 8 页、第 10 页、第 15 页、第 48 页
+  also_read:
+  - network-setup
+  - environment-care
+  - maintenance-correction
+  - daily-operation
+  - file-backup
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 排障第一入口，原书优先级第 1
+- capability_id: cap.rcp-3500.specs-reference
+  revision: 1
+  status: active
+  slug: specs-reference
+  title: 规格与接口速查
+  importance: medium
+  importance_rationale: 映射 task-16（查规格/电缆长度/接口针脚）——原书任务清单标注"施工与备线依据；数值必须零改写"。 遗漏后果：数值被换算/改写出错导致布线超限或供电不符（p19/p64 边界），按针脚表在 MCS 盲接 Tally 不工作（ce32），双型号混述涉主黑电平设定项找错（ce37）。
+  one_liner: 查询→原样回报，禁止换算——规格表/针脚表/电缆长度/线材规格均按原文数值、单位与页码回报，随附 Tally-MCS 禁用与型号差异提示，表中没有的字段答"原书未给"。
+  intents:
+  - 查整机规格参数（电源/PoE/功耗/温度/质量/机架）
+  - 查电缆长度上限与 LAN 线材规格
+  - 查 EXT I/O 接口针脚分配与接口选件型号
+  - 查电解电容寿命口径（基准工况）
+  - 核对既有接入参数是否超规
+  keywords:
+  - 规格
+  - 参数
+  - 针脚
+  - 针脚分配
+  - EXT I/O
+  - 电缆长度
+  - 电源电压
+  - PoE
+  - 功耗
+  - specs
+  - pinout
+  - pin assignment
+  card: cards/specs-reference.md
+  frontmatter:
+    description: '何时用: 施工/采购/机架规划/接线时查规格——电源电压、PoE、功耗、温度、质量、电缆长度上限、
+
+      LAN 线材要求、EXT I/O 九针针脚分配、电解电容寿命口径；排障时核对参数是否超规。触发词: 规格、
+
+      参数、针脚、pin、pinout、多少伏、多少米、specs、pin assignment、cable length、power supply。
+
+      何时不用: 拿数值做组网决策用 network-setup；环境红线与保养动作用 environment-care。核心契约:
+
+      查询→原样回报（数值/单位零改写、禁止换算），表中没有的字段答"原书未给"。
+
+      '
+    tags:
+    - reference
+    - lookup
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 3 页、第 15-16 页、第 55-56 页
+  also_read:
+  - network-setup
+  - environment-care
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 查表型，独立复用低
+- capability_id: cap.rcp-3500.environment-care
+  revision: 1
+  status: active
+  slug: environment-care
+  title: 使用环境与保养红线
+  importance: medium
+  importance_rationale: 映射 task-17（使用环境红线：冷凝/干扰/寿命/医疗/清洁）——原书任务清单标注"违反导致设备损坏或 健康风险"。遗漏后果：冷凝未消失通电致设备损坏（ce01），干扰医疗设备有人身健康风险（ce04）， 薄纸擦屏划伤涂层（ce02），超基准工况按 5 年排电容更换致提前故障（ce05）。
+  one_liner: 环境七红线逐条"触发→动作→后果"——冷凝断电、通信设备建议关机（建议级不升格）、电容约 5 年按工况折减、医疗设备勿近、接网先确认安全、软布清洁、LCD 坏点非故障；使用前确认运行正常。
+  intents:
+  - 判断冷凝等环境风险并处置
+  - 按手册方法清洁触控面板
+  - 制定电容更换/维护计划的寿命口径
+  - 接入网络前确认网络安全
+  - 选址避开医疗设备与电磁干扰源
+  - 每日投入使用前确认运行正常
+  keywords:
+  - 冷凝
+  - 清洁
+  - 触控面板
+  - 电容寿命
+  - 电磁干扰
+  - 医疗设备
+  - 网络安全
+  - 坏点
+  - 使用环境
+  - 保养
+  - condensation
+  - cleaning
+  card: cards/environment-care.md
+  frontmatter:
+    description: '何时用: 搬运/进场遇温差（冷凝）、安装选址（医疗设备/电磁干扰）、触控屏清洁、维护计划（电容
+
+      寿命口径）、接网前安全确认、每日投用前运行确认。触发词: 冷凝、起雾、清洁、擦屏幕、电容、寿命、
+
+      干扰、手机、起搏器、医疗设备、网络安全、坏点、condensation、cleaning、lifespan、dead pixel。
+
+      何时不用: 灯语排障用 led-diagnostics；组网与接地操作用 network-setup；Shading/RPN 等校正维护用
+
+      maintenance-correction。核心: 七条红线逐条触发→动作→后果，强制/建议/口径三级语气原样保留。
+
+      '
+    tags:
+    - checklist
+    - safety
+    - maintenance
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 3 页、第 56 页
+  also_read:
+  - led-diagnostics
+  - network-setup
+  - specs-reference
+  - maintenance-correction
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 清单型，复用低
+- capability_id: cap.rcp-3500.daily-operation
+  revision: 1
+  status: active
+  slug: daily-operation
+  title: 摄像机日常操作（自动调整/光圈/快门/增益/ND-CC 滤镜/测试信号）
+  importance: critical
+  importance_rationale: 映射 task-04（自动调整, 手册标注"每日/每场景必做"）与 task-05（拍摄中高频画质操作）；漏失后果为直播亮度/白平衡失控, 滤镜许可与 Zoom/Focus 归属误判会产生伪故障报修。
+  one_liner: 动任何旋钮前先看灯——控制权灯亮才操作；自动调整看灯语（亮=进行中/灭=完成/闪=已停止）；滤镜灯灭先按上/下按钮夺取许可；监视器异常先查 BARS 优先级与 Zoom/Focus Active。
+  intents:
+  - 执行/中止 AWB、ABB、LEVEL、SKIN DTL AUTO HUE 自动调整
+  - 调节光圈、快门、增益并读懂指示灯
+  - 切换 ND/CC 滤镜并夺取控制许可
+  - 选择彩条/测试信号输出
+  - 判断变焦/对焦控制权归属（面板 vs 机身）
+  keywords:
+  - 晨检
+  - 白平衡
+  - AWB
+  - ABB
+  - 黑平衡
+  - 自动调整
+  - auto setup
+  - 光圈
+  - iris
+  - 快门
+  - shutter
+  - DEG
+  - ECS
+  - 增益
+  - gain
+  - ND滤镜
+  - CC滤镜
+  - 控制许可
+  - 夺取
+  - BARS
+  - 彩条
+  - TEST
+  - 测试信号
+  - CLOSE
+  - CLS
+  - RELATIVE
+  - ABSOLUTE
+  - zoom
+  - focus
+  - START/BREAK
+  card: cards/daily-operation.md
+  frontmatter:
+    description: 'RCP-3500/3501 供电后的日常画质操作：AUTO SETUP 自动调整（AWB/ABB/LEVEL 等）执行与中止灯语、光圈（CLOSE/CLS）、快门读数（DEG/SLS/SHT/ECS）、ND/CC 滤镜许可夺取、BARS/TEST 优先级、Zoom/Focus 归属。触发词：晨检、白平衡 AWB、auto setup、iris、shutter、gain、ND
+      filter、彩条 BARS、test signal。不适用于多面板仲裁、Paint 细调、灯语排障、手动 RGB 平衡（各归相邻能力）。
+
+      '
+    tags:
+    - operation
+    - procedure
+    - daily
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: p10-14（AUTO SETUP/滤镜/快门/调节模式）、p8（IRIS/MB 激活）、p25（型号差异）、p42（Zoom/Focus）
+  also_read:
+  - white-black-balance
+  - mcs-operations
+  - led-diagnostics
+  - paint-adjustment
+  - maintenance-correction
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 最高频日常操作
+- capability_id: cap.rcp-3500.white-black-balance
+  revision: 1
+  status: active
+  slug: white-black-balance
+  title: 白/黑/闪光平衡手动调节（RGB 按序 + ABSOLUTE 绝对/相对模式）
+  importance: high
+  importance_rationale: 映射 task-06（手动白/黑/闪光平衡, 色彩一致性的核心手段）；ABSOLUTE 七种自动退回场景是手册明示的高频坑——"旋钮刻度≠设定值"极易被误判为设备故障（ce20）。
+  one_liner: 调白/黑/闪光平衡一律先看 ABSOLUTE 灯态、按 R→G→B 顺序；刻度对不上先对照七种自动退回场景（AWB 后/读场景文件后/切 FLARE 后等），重按 ABSOLUTE 恢复绝对值再调。
+  intents:
+  - 手动调节白平衡（WHITE 旋钮 RGB 按序）
+  - 手动调节黑平衡与闪光平衡（BLACK/FLARE 双用途切换）
+  - 判断/恢复 ABSOLUTE 绝对值与相对值模式
+  - 评估主/从白平衡联动的可用性（CNU vs LAN）
+  keywords:
+  - 白平衡
+  - white balance
+  - 黑平衡
+  - black balance
+  - 闪光平衡
+  - flare
+  - BLACK旋钮
+  - FLARE按钮
+  - RGB顺序
+  - ABSOLUTE
+  - 绝对值
+  - absolute
+  - 相对值
+  - relative
+  - 刻度对不上
+  - knob scale mismatch
+  - 主从白平衡
+  - master
+  - subordinate
+  - CNU
+  - RCP Assign
+  card: cards/white-black-balance.md
+  frontmatter:
+    description: '手动调节 WHITE/BLACK/FLARE 旋钮的 RGB 白平衡、黑平衡、闪光平衡；ABSOLUTE 绝对值/相对值机制（七种自动退回场景识别与恢复）；主/从白平衡仅限 CNU 旧有连接、LAN 不可用。触发词：白平衡 white balance、黑平衡 black balance、flare、R/G/B 按序、ABSOLUTE、刻度对不上 knob mismatch、主从
+      master/subordinate。不适用于 AWB/ABB 按钮流程、Paint ATW 参数、Black Set/Shading（各归相邻能力）。
+
+      '
+    tags:
+    - operation
+    - mental-model
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: p13-14（ABSOLUTE 与调节模式）、p8（主/从边界）、p10（主/从优先规则）、p25（型号差异）
+  also_read:
+  - daily-operation
+  - paint-adjustment
+  - scene-files
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 过五判据但与 daily-operation 触发强竞争，按预算排序降为能力卡；split-on-evidence 可后补晋级
+- capability_id: cap.rcp-3500.scene-files
+  revision: 1
+  status: active
+  slug: scene-files
+  title: 场景文件管理（面板 STORE 存取 / EXPAND 32 文件 / Dissolve）
+  importance: high
+  importance_rationale: 映射 task-07（场景文件存/取/扩展管理, 多机位风格统一的关键）；STORE 状态机误用会覆盖场景资产（ce19, 推导单元）, 且"读取场景文件"联动 ABSOLUTE 退回影响后续手感。
+  one_liner: 按编号前先看 STORE 灯——闪烁=写入覆盖待命（再按 STORE 取消）, 未闪烁=读取；1-5 号直达灯亮, 6 号起走 EXPAND（最多 32 个）；后悔再按同编号恢复访问前状态。
+  intents:
+  - 注册（存储）当前参数到场景文件
+  - 读取场景文件（含 6 号以上 EXPAND 通道）
+  - 恢复访问前状态/取消注册待命
+  - 设定读取时的 Dissolve 渐变与速度
+  keywords:
+  - 场景文件
+  - scene file
+  - STORE
+  - 注册
+  - register
+  - 读取
+  - recall
+  - SCENE FILE LED
+  - EXPAND
+  - 32个
+  - Dissolve
+  - 渐变切换
+  - Dissolve Speed
+  - 恢复访问前状态
+  - 覆盖
+  - overwrite
+  - 编号灯
+  card: cards/scene-files.md
+  frontmatter:
+    description: '场景文件的注册/读取/恢复与渐变设定：STORE 闪烁注册规则（1-5 号灯直达、6 号起经 EXPAND、最多 32 个）、再按同编号恢复访问前状态、Scene 菜单 Dissolve/Dissolve Speed、STORE 待命态误按覆盖防护。触发词：场景文件 scene file、STORE、注册 register、读取 recall、EXPAND、Dissolve
+      渐变、覆盖 overwrite。不适用于：场景文件传 USB（file-backup）、读取后旋钮刻度失真（white-black-balance 的 ABSOLUTE 机制）。
+
+      '
+    tags:
+    - operation
+    - procedure
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: p11（场景文件控制模块）、p52（Scene 菜单）
+  also_read:
+  - file-backup
+  - white-black-balance
+  - paint-adjustment
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 同上（“存场景”常与日常操作同请求出现）
+- capability_id: cap.rcp-3500.file-backup
+  revision: 1
+  status: active
+  slug: file-backup
+  title: USB 备份/恢复/初始化（RCP Config 与 Network Config / All Preset）
+  importance: high
+  importance_rationale: 映射 task-12（换机/故障恢复的生命线）；两类备份内容互斥、漏一即残缺；文件编号撞号直接覆盖且无回收（ce18）=配置资产永久丢失；备份时间戳依赖内部时钟（task-12 关联 task-09 时钟设定）。
+  one_liner: 完整备份=[RCP Config] 与 [Network Config] 各 Store 一次, 选号前必查列表避让已占用编号；All Preset 全量初始化（工程师模式）执行前必须已有备份。
+  intents:
+  - 将 RCP 设定备份到 USB 驱动器
+  - 从 USB 恢复/删除备份文件
+  - 执行 All Preset 全量初始化
+  - 校准内部时钟以保证备份时间戳可信
+  keywords:
+  - USB备份
+  - backup
+  - RCP Config
+  - Network Config
+  - Store
+  - Recall
+  - Delete
+  - File ID
+  - 文件编号
+  - 撞号
+  - 覆盖
+  - overwrite
+  - All Preset
+  - 恢复出厂
+  - factory reset
+  - 初始化
+  - 工程师模式
+  - 时钟
+  - time setting
+  - 时间信号
+  - USB驱动器
+  card: cards/file-backup.md
+  frontmatter:
+    description: 'RCP 设定的 USB 备份/恢复/删除与 All Preset 全量初始化：[RCP Config]（不含网络设定）与 [Network Config] 两类必须分开各备一次；撞号即覆盖、无回收；File ID 命名；备份前校准时钟（对时间信号按 Set）。触发词：USB 备份 backup、RCP Config、Network Config、recall 恢复、All
+      Preset、恢复出厂 factory reset、覆盖 overwrite、时钟 time setting。不适用于场景/镜头文件传输与进工程师模式（各归相邻能力）。
+
+      '
+    tags:
+    - operation
+    - procedure
+    - data-safety
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: p25-26（保存和初始化设定）、p17-18（时钟设定）
+  also_read:
+  - scene-files
+  - engineer-mode-security
+  - customization
+  - maintenance-correction
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 同上
+- capability_id: cap.rcp-3500.customization
+  revision: 1
+  status: active
+  slug: customization
+  title: 自定义配置（SW Customize / Assign Knob / Menu Customize / Status Customize / VR Setting）
+  importance: medium
+  importance_rationale: 映射 task-11（自定义按钮/旋钮/菜单/状态画面, 提效手段）；BOOK_OVERVIEW 标注"未保存退出即丢失是高频坑"（手册 5 处重复警告）, 但漏配只影响操作效率、不直接危及播出安全, 故列 medium。
+  one_liner: 自定义分配一律以两段 Save 收尾（未保存退出=不生效）；22 项着色项目必须先经 Menu Customize 记录、再配置 CUSTOM1-5 按钮, 顺序不可颠倒。
+  intents:
+  - 向自由按键/旋钮分配功能（SW Customize / Assignable Knob）
+  - 编辑自定义着色菜单并向 CUSTOM1-5 分配项目
+  - 自定义状态画面版式与 Knob 1-4 功能
+  - 更改调节旋钮灵敏度（VR Setting）
+  - 排查"分配改了但不生效"
+  keywords:
+  - 自定义
+  - customize
+  - 分配
+  - assign
+  - SW Customize
+  - Assignable Knob
+  - CUSTOM1-5
+  - CUSTOM PAINT
+  - F1
+  - Menu Customize
+  - 自定义着色菜单
+  - 状态画面
+  - status screen
+  - Status Customize
+  - Knob Customize
+  - 灵敏度
+  - sensitivity
+  - VR Setting
+  - 琥珀色
+  - Save
+  - 不生效
+  - MB Knob
+  card: cards/customization.md
+  frontmatter:
+    description: '把高频功能分配到顺手位置：SW Customize（F 键）、Assignable Knob、Custom Menu SW（CUSTOM1-5，22 项先经 Menu Customize 记录）、Status/Knob Customize（状态画面六种版式+Knob 1-4）、VR Setting 灵敏度。铁律：未两段 Save 就退出菜单=分配不生效。触发词：自定义
+      customize、分配 assign、CUSTOM PAINT、状态画面 status screen、灵敏度 knob sensitivity、没生效 not applied。不适用于菜单权限与自定义备份（各归相邻能力）。
+
+      '
+    tags:
+    - operation
+    - procedure
+    - productivity
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: p20-22（SW Customize/Assignable Knob）、p22-23（Menu Customize/Custom Menu SW）、p24-25（VR Setting）、p26-28（Status/Knob Customize）、p47（MB Knob 型号差异）
+  also_read:
+  - engineer-mode-security
+  - file-backup
+  - daily-operation
+  - paint-adjustment
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 低频提效手段
+- capability_id: cap.rcp-3500.engineer-mode-security
+  revision: 1
+  status: active
+  slug: engineer-mode-security
+  title: 工程师模式、安全代码与权限
+  importance: high
+  importance_rationale: 映射 task-09（工程师模式进出与安全代码，File/Maintenance 的前置门；0359 入口藏得深）与 task-10 （安全限制防现场误操作）。遗漏后果：代码遗失面板锁死无恢复手段（ce33）、普通模式找不到菜单误判 功能缺失（ce36/ce33）、Full Lock 误启用无原文解除路径（ce35）。
+  one_liner: 先查权限再查故障——File/Maintenance/Paint 菜单和十类设定都藏在工程师模式后（MENU→Config→RCP→Security→Engineer Mode），代码生命周期走 0359 三键入口，权限分 Page（全锁/只读/Full Paint）与 Item（七开关）两层。
+  intents:
+  - 进入/退出工程师模式（含已设码分支）
+  - 设置/更改/删除安全代码，接手无码或遗忘码的面板
+  - 配置 Page Permission 与 Item Permission 防误操作
+  - 判断某设定是否属于工程师模式清单
+  - 排查"菜单不见了/选项不显示"的权限原因
+  keywords:
+  - 工程师模式
+  - engineer mode
+  - 安全代码
+  - security code
+  - 0359
+  - Security
+  - 权限
+  - Page Permission
+  - Item Permission
+  - Full Lock
+  - View Mode
+  - Full Paint
+  - 锁死
+  - locked out
+  - 菜单不见
+  card: cards/engineer-mode-security.md
+  frontmatter:
+    description: '何时用: 找不到 Paint/File/Maintenance 菜单、要进工程师模式、设/改/删安全代码、接手面板码遗失、
+
+      配置只读/全锁等防误操作权限、判断设定项为何不显示。触发词: 工程师模式 engineer mode、安全代码
+
+      security code、0359、权限 permission、Full Lock、View Mode、菜单不见了 menu missing。何时不用:
+
+      连接配置内容用 network-setup；按钮/旋钮分配用 customization；Paint 参数语义用 paint-adjustment。
+
+      核心: 先查权限再查故障；0359 三键入口兼作应急恢复通道。
+
+      '
+    tags:
+    - procedure
+    - security
+    - decision
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 16-20 页、第 38-39 页、第 49-52 页
+  also_read:
+  - network-setup
+  - customization
+  - paint-adjustment
+  - file-backup
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: File/Maintenance 总开关，意图独立
+- capability_id: cap.rcp-3500.paint-adjustment
+  revision: 1
+  status: active
+  slug: paint-adjustment
+  title: Paint 菜单图像调整
+  importance: high
+  importance_rationale: 映射 task-13（Paint 菜单图像精调，原书标注"VD 岗位核心技能；20 页全表需可检索"）。遗漏后果： 降噪/锐化对价拉满损画质（ce23/ce24）、Auto Knee 抢手动控制权"调了没用"（ce25）、ATW 漂色 （ce26）、三通道型号 Skin DTL 关不掉（ce27）、Flare 过校正压暗部（ce22）。
+  one_liner: 带着画面问题进 Paint——进门先查权限（工程师模式或 Full Paint），按"问题→菜单项"决策表定位（肤色→Skin DTL、细节→Detail、高光→Knee、暗部→Black Gamma、偏色→Matrix），每步先看对价再动旋钮。
+  intents:
+  - 按画面问题定位 Paint 菜单项与调节方向
+  - 调肤色细节（Skin DTL 三通道/Auto Hue/Gate）
+  - 调细节锐度与降噪的权衡（Detail/Crispening/Noise Suppression）
+  - 调高光/暗部（Knee/Auto Knee/White Clip/Black Gamma）
+  - 整体色彩还原（User/Preset/Multi Matrix）与伽马曲线选择
+  - HDR 输出与实时色调控制
+  keywords:
+  - 画面调色
+  - paint
+  - 肤色细节
+  - skin detail
+  - 轮廓
+  - detail
+  - 伽马
+  - gamma
+  - 拐点
+  - knee
+  - 黑伽马
+  - black gamma
+  - 矩阵
+  - matrix
+  - multi matrix
+  - HDR
+  - 实时色调
+  - live tone
+  - 饱和度
+  - saturation
+  - 彩条
+  card: cards/paint-adjustment.md
+  frontmatter:
+    description: '何时用: 画面偏色/肤色差/细节太肉太糙/高光压不住/暗部发灰，或问某参数在 Paint 菜单哪一页、
+
+      什么意思；HDR 与 Live Tone 调整。触发词: 画面调色 paint、肤色细节 skin detail、伽马 gamma、
+
+      拐点 knee、矩阵 matrix、HDR、实时色调 live tone。何时不用: 面板旋钮手动 RGB 白黑平衡用
+
+      white-black-balance；AWB/ABB 按钮流程用 daily-operation；Shading/RPN 传感器校正用
+
+      maintenance-correction。核心: 先进门（权限）再对表（问题→菜单项），每步先看对价。
+
+      '
+    tags:
+    - reference
+    - procedure
+    - image
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 16 页、第 20 页、第 22-23 页、第 28-37 页、第 51 页
+  also_read:
+  - white-black-balance
+  - maintenance-correction
+  - customization
+  - daily-operation
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 意图存在但与整机技能触发高度重叠
+- capability_id: cap.rcp-3500.maintenance-correction
+  revision: 1
+  status: active
+  slug: maintenance-correction
+  title: 维护校正：Shading / OHB / RPN / 镜头
+  importance: medium
+  importance_rationale: 映射 task-14（周期性维护：Shading/OHB/RPN/镜头补偿，原书标注"防止误判白点为故障送修""校正 结果因未落盘而白做"）。遗漏后果：Shading 未存 OHB 断电全丢（ce28/p56）、白点误报修（ce34）、 Iris Gain 拉满光圈振荡（ce29）、Active ON 机身失灵误判故障（ce30）、RB Only 模式误用（ce31）。
+  one_liner: 维护三步走——先定控制权与监视路由（Zoom/Focus Active、PIX/WF Synchro），再逐通道 Shading 校正，最后必须 OHB Store 落盘；固定白点不是故障，ABB→RPN 两级处置。
+  intents:
+  - 执行 Black/White Shading 校正（自动/手动 SAW-PARA）并落盘 OHB
+  - RPN 白点手动校正（先 ABB 后 RPN）
+  - 自动白色色差模式选型（RGB vs RB Only）
+  - 调整自动光圈参数（Level/APL Ratio/Iris Gain/Pattern）
+  - 切换变焦/对焦控制权（Zoom/Focus Active）
+  - 配置校正作业的监视联动（PIX/WF Synchro）
+  keywords:
+  - 维护
+  - maintenance
+  - 黑黑平衡
+  - shading
+  - 色差
+  - 白点
+  - dead pixel
+  - RPN
+  - OHB
+  - OHB Store
+  - 光圈振荡
+  - iris gain
+  - ALAC
+  - F drop
+  - Zoom/Focus
+  - 控制权
+  - Black Set
+  - ATW
+  card: cards/maintenance-correction.md
+  frontmatter:
+    description: '何时用: 换镜头/周期维护做 Shading 校正、画面固定白点处置、光圈"呼吸"振荡、摄像师报机身调焦
+
+      失灵、自动白色色差模式选型、校正作业的监视联动。触发词: 维护 maintenance、shading 色差、白点
+
+      dead pixel、RPN、OHB、光圈振荡 iris oscillation、Zoom/Focus 控制权。何时不用: 画质风格参数
+
+      用 paint-adjustment；白点要不要报修的甄别入口用 led-diagnostics；面板设定 USB 备份用
+
+      file-backup。核心: 定权→校正→落盘（OHB Store），一步不能少。
+
+      '
+    tags:
+    - procedure
+    - maintenance
+    - camera
+  source_evidence:
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 40-46 页、第 49-50 页、第 42 页
+  also_read:
+  - paint-adjustment
+  - led-diagnostics
+  - file-backup
+  - daily-operation
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 低频周期性
+
+- capability_id: cap.hdcu.transport-setup
+  revision: 1
+  status: active
+  slug: ccu-transport-setup
+  title: 传输方式决策与连接配置
+  importance: critical
+  importance_rationale: 映射 task-01（按型号与线缆选定传输方式并完成连接配置）。BOOK_OVERVIEW §4 标注"连接是一切前提；选错 CABLE TYPE 整系统不通"。吸收 7 条 verified 候选（f01–f06、p72）。遗漏后果：漏装 HKCU-FB50/SM50、超距施工（光纤 4 km/2 km、单模 10 km）、单模光纤误接 HDC5000/5500。
+  one_liner: 先按物理线缆与所连摄像机型号五选一定 CABLE TYPE（FIBER CAMERA CABLE / COAX / COAX(HDCE) / SINGLE-MODE FIBER），再定 FIBER TRANSMIT RATE（HIGH/ULTRA），选件门槛与距离上限缺一不可。
+  intents:
+  - 把 CCU 接进摄像机系统并选定传输方式（光纤/IP/单模光纤/同轴/同轴-HDCE）
+  - 判断需要装哪块选件板（HKCU-FB50/SDI50/SFP50/SM50）
+  - 核算光纤与同轴的最大传输距离
+  - 配置 <CAMERA I/F> 与 <VIDEO I/O> 的必配菜单项
+  keywords:
+  - 传输方式
+  - CABLE TYPE
+  - FIBER TRANSMIT RATE
+  - 光纤
+  - 单模光纤
+  - 同轴
+  - HDCE
+  - HKCU-FB50
+  - HKCU-SM50
+  - transport
+  card: cards/ccu-transport-setup.md
+  frontmatter:
+    description: '何时用: 新装/搬迁 CCU 接入摄像机系统、选传输方式（光纤/IP/单模光纤/同轴/同轴-HDCE）、判断选件板需求、核算传输距离、配置 CAMERA I/F 与 VIDEO I/O。触发词: 传输方式、CABLE TYPE、光纤、单模、同轴、HDCE、FIBER TRANSMIT RATE、选件。何时不用: 系统频率与摄像机格式设定用 ccu-system-format；输出/返回格式查表用 ccu-format-lookup；两端联调用 system-integration。'
+    tags:
+    - decision
+    - procedure
+    - connection
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 4-8 页（五张连接图及脚注）、第 29-31 页（S01-S03）
+  also_read:
+  - ccu-system-format
+  - system-integration
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 五条判据全通过。"怎么把 CCU 接进系统"是典型可独立提出的用户意图，且输入/步骤/输出/完成标准自洽。合并包可发现入口 = 1 router + 7 promoted = 8（软预算上限），本条占其中一席。
+
+- capability_id: cap.hdcu.system-format
+  revision: 1
+  status: active
+  slug: ccu-system-format
+  title: 系统格式配置
+  importance: critical
+  importance_rationale: 映射 task-02（设置系统频率/摄像机格式/传输速率）。BOOK_OVERVIEW §4 标注"决定所有输出/返回格式的源头"。吸收 8 条 verified 候选（f07、p09–p14、p20）。遗漏后果：CAMERA FORMAT 与 FIBER TRANSMIT RATE 不匹配导致整链格式不可用（ce26/ce33）。
+  one_liner: SYSTEM（1.001(525)/1.000(625)）× FIBER TRANSMIT RATE（HIGH/ULTRA）× CAMERA FORMAT 三者互相约束，共同决定所有输出/返回格式的可选集；BIT DEPTH/CCU VIDEO CONVERT/FRAME CONVERT DELAY/HD-SD DELAY 各有前置条件。
+  intents:
+  - 设置系统工作频率与摄像机信号格式
+  - 判断某 CAMERA FORMAT 在当前 SYSTEM 与速率下是否可选
+  - 配置 BIT DEPTH、CCU VIDEO CONVERT、延迟与 4K 输出选件
+  keywords:
+  - 系统格式
+  - SYSTEM
+  - CAMERA FORMAT
+  - BIT DEPTH
+  - CCU VIDEO CONVERT
+  - FRAME CONVERT DELAY
+  - HD-SD DELAY
+  - HZCU-UHD35
+  - system format
+  card: cards/ccu-system-format.md
+  frontmatter:
+    description: '何时用: 设定 SYSTEM/CAMERA FORMAT/FIBER TRANSMIT RATE、判断格式可选集、配置 BIT DEPTH 与视频转换延迟、确认 4K 输出是否需 HZCU-UHD35。触发词: 系统格式、SYSTEM、CAMERA FORMAT、BIT DEPTH、CCU VIDEO CONVERT、延迟。何时不用: 传输方式决策用 ccu-transport-setup；具体接口输出格式查表用 ccu-format-lookup；HDR 配置用 ccu-hdr-setup。'
+    tags:
+    - procedure
+    - format
+    - constraint
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 33-34 页（S05）、第 36-45 页（各 FORMAT 项）
+  also_read:
+  - ccu-format-lookup
+  - ccu-hdr-setup
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过，但被 ccu-format-lookup 高度依赖（格式派生链的上游），且触发词与传输/格式卡重叠；为控制可发现入口预算降为能力卡，经统一入口可达。
+
+- capability_id: cap.hdcu.format-lookup
+  revision: 1
+  status: active
+  slug: ccu-format-lookup
+  title: 输出/返回格式派生与查表
+  importance: critical
+  importance_rationale: 映射 task-03/04（查表得到某接口的输出/返回格式）。BOOK_OVERVIEW §4 标注"施工与接线依据；格式串必须零改写"。吸收 5 条 verified 候选（f08、f09、f10、f32、p17）。含 f31 已知缺口（第 67 页 Link 编配表）。
+  one_liner: 所有输出格式（OUTPUT FORMAT1-4/IP）与返回格式（RETURN FORMAT1-3/IP）都是 CABLE TYPE × FIBER TRANSMIT RATE × SYSTEM × CAMERA FORMAT 的派生查表结果（第 54/56/58/63 页），格式串必须原样保留；UHD-SDI A/B 为专用输出不可配返回格式。
+  intents:
+  - 查某接口（SDI-OUT/SDI-I/O/UHD-SDI/IP-OUT）能输出什么格式
+  - 查某返回选择（SDI-RET/UHD-SDI/IP-RET）对应什么格式
+  - 理解格式派生机制与四张格式表的分流规则
+  - 用 2SI DIAMOND MARK 自检 4K 链路接线
+  keywords:
+  - 输出格式
+  - 返回格式
+  - OUTPUT FORMAT
+  - RETURN FORMAT
+  - SDI-OUT
+  - SDI-RET
+  - UHD-SDI
+  - IP-OUT
+  - IP-RET
+  - 2SI
+  - format lookup
+  card: cards/ccu-format-lookup.md
+  frontmatter:
+    description: '何时用: 查某接口的输出/返回格式、理解格式派生规则、做 4K 链路自检、施工接线取格式依据。触发词: 输出格式、返回格式、OUTPUT FORMAT、RETURN FORMAT、SDI-OUT、IP-RET、2SI。何时不用: 设定系统格式与速率用 ccu-system-format；HDR 伽马与色彩空间用 ccu-hdr-setup。注意: 第 67 页 HFR↔BNC Link 编配表存在文本提取缺口，HFR 接线依据不完整。'
+    tags:
+    - lookup
+    - format
+    - construction
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 36-47 页（S07-S16）、第 48-67 页（返回格式与输出格式矩阵）
+  also_read:
+  - ccu-system-format
+  - ccu-transport-setup
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但本质是 ccu-system-format 的下游查表步骤，独立触发会与上游抢词，降为能力卡。
+
+- capability_id: cap.hdcu.hdr-setup
+  revision: 1
+  status: active
+  slug: ccu-hdr-setup
+  title: HDR / LIVE HDR 配置
+  importance: high
+  importance_rationale: 映射 task-05（配置 HDR / LIVE HDR / OETF / 色彩空间）。BOOK_OVERVIEW §4 标注"4K/HDR 制作核心；HDR 输出不支持部分绘制功能"。吸收 f11（含 ce23 边界）。
+  one_liner: HDR MODE 的 LIVE HDR 让同一摄像机同时输出 HDR 与 SDR；HDR OETF 取 S-Log3 或 HLG，HDR/4K COLOR SPACE 取 BT709 或 BT2020；HDR 输出不支持部分绘制功能，且 HDR 与 720 返回互斥、RGB444 一律 SDR。
+  intents:
+  - 开启/关闭 LIVE HDR 拍摄模式
+  - 选择 HDR OETF（S-Log3 / HLG）与色彩空间
+  - 配置 SDR GAIN、HDR CONTRAST、HDR BLACK OFFSET、HDR LOOK
+  - 判断某输出格式能否在 HDR/SDR 间切换
+  keywords:
+  - HDR
+  - LIVE HDR
+  - OETF
+  - S-Log3
+  - HLG
+  - BT2020
+  - BT709
+  - SDR GAIN
+  - HDR LOOK
+  - color space
+  card: cards/ccu-hdr-setup.md
+  frontmatter:
+    description: '何时用: 开/关 LIVE HDR、选 HDR OETF 与色彩空间、配置 SDR GAIN/HDR CONTRAST/BLACK OFFSET/LOOK、判断格式的 HDR-SDR 可切换性。触发词: HDR、LIVE HDR、OETF、S-Log3、HLG、BT2020、色彩空间。何时不用: 系统格式与速率用 ccu-system-format；输出格式查表用 ccu-format-lookup。'
+    tags:
+    - procedure
+    - hdr
+    - video
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 35 页（S06 <HDR>）、第 36-45 页（各 OETF/COLOR 项）
+  also_read:
+  - ccu-system-format
+  - ccu-format-lookup
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 独立意图/契约/运行通过，复用判据偏弱（HDR 配置常与系统格式一并完成）；降为能力卡。
+
+- capability_id: cap.hdcu.genlock-sync
+  revision: 1
+  status: active
+  slug: ccu-genlock-sync
+  title: 同步配置（GENLOCK + PTP）
+  importance: high
+  importance_rationale: 映射 task-06（配置同步）。BOOK_OVERVIEW §4 标注"IP 系统必须用 NETWORK；错配导致 UNLOCK"。吸收 2 条 verified 候选（f12、f13）。
+  one_liner: GENLOCK MODE 三选一（HD / SD / NETWORK）；ST2110 系统必须选 NETWORK，此时不需要 REFERENCE IN 外部输入而改用 HKCU-SFP50 的 LAN1/LAN2 做 PTP（仅支持 ST2059-2）；相位范围随 HD/SD 不同，LOCK STATUS 四态判读。
+  intents:
+  - 选择外部参考锁定模式（HD/SD/NETWORK）
+  - 配置网络同步 PTP（域号、通信模式、延迟请求间隔）
+  - 调整 H-PHASE/V-PHASE 与 SYNC OUT
+  - 判读 LOCK STATUS 与 PTP STATUS
+  keywords:
+  - 同步
+  - GENLOCK
+  - PTP
+  - ST2059-2
+  - REFERENCE
+  - 10F BB
+  - H-PHASE
+  - LOCK STATUS
+  - genlock
+  card: cards/ccu-genlock-sync.md
+  frontmatter:
+    description: '何时用: 选 GENLOCK 模式、配置 PTP 网络同步、调相位、判读锁定状态。触发词: 同步、GENLOCK、PTP、ST2059-2、REFERENCE、UNLOCK、相位。何时不用: 基础 IP 编址用 ccu-network-setup；ST2110 协议栈用 ccu-ip-live。'
+    tags:
+    - procedure
+    - sync
+    - network
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 32 页（S04 <GENLOCK>）、第 80-81 页（N04-N05）
+  also_read:
+  - ccu-network-setup
+  - ccu-ip-live
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 判据大体通过，复用偏弱（同步设置属一次性工程配置）；降为能力卡。
+
+- capability_id: cap.hdcu.network-setup
+  revision: 1
+  status: active
+  slug: ccu-network-setup
+  title: 网络与 IP 配置
+  importance: high
+  importance_rationale: 映射 task-07（配置 IP 地址与通信模式）。BOOK_OVERVIEW §4 标注"多机系统与 Web 菜单的前置"。吸收 3 条 verified 候选（f14、f15、f35）。
+  one_liner: 按端口（LAN-COM / LAN1 / LAN2）分别设 IP、子网掩码、默认网关；LAN1/LAN2 链路速度必须相同否则无法正常操作；DHCP 的"自动 IP"仅适用于 LAN-COM；CNS MODE 三选一（LEGACY/BRIDGE/MCS）并设 CCU NO 与主设备 IP。
+  intents:
+  - 配置 LAN-COM / LAN1 / LAN2 的 IP、子网掩码与默认网关
+  - 设定 CNS MODE、CCU 编号与 MASTER IP ADDRESS
+  - 用 PING 做网络连通性诊断
+  - 判断 DHCP/自动 IP 的适用范围与链路速度约束
+  keywords:
+  - IP 地址
+  - 子网掩码
+  - 默认网关
+  - DHCP
+  - LAN-COM
+  - CNS
+  - CCU 编号
+  - PING
+  - 链路速度
+  - ip address
+  card: cards/ccu-network-setup.md
+  frontmatter:
+    description: '何时用: 配 CCU 的 IP/子网/网关、设 CNS 模式与 CCU 编号、PING 诊断、排查链路速度不一致。触发词: IP 地址、子网掩码、网关、DHCP、CNS、CCU 编号、PING。何时不用: PTP 同步用 ccu-genlock-sync；ST2110 协议用 ccu-ip-live；Web 界面用 ccu-web-menu；RCP 面板侧组网用 network-setup。'
+    tags:
+    - procedure
+    - network
+    - addressing
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 79 页（N01-N02）、第 86 页（N17）
+  also_read:
+  - ccu-genlock-sync
+  - system-integration
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但与 RCP 侧 network-setup、以及 ccu-ip-live/ccu-web-menu 存在触发近邻，为降低双触发风险降为能力卡。
+
+- capability_id: cap.hdcu.ip-live
+  revision: 1
+  status: active
+  slug: ccu-ip-live
+  title: IP Live / NMOS / 第三方协议配置
+  importance: high
+  importance_rationale: 映射 task-08（配置 IP Live / NMOS / Ember+ / SNMP / TSL UMD）。BOOK_OVERVIEW §4 标注"ST2110 全 IP 制作与第三方集成"。吸收 4 条 verified 候选（f16、f17、f18、p35）。
+  one_liner: IP Live（LSM）配置需 HKCU-SFP50，PORT 更改后必须重启本机；NMOS（IS-04/IS-05）仅当 IP Live PORT 设为 DISABLE 时可选；Ember+ 需 HZCU-CNFG50、SNMP 需 HZCU-SNMP50；TSL UMD 走 UDP 8900。
+  intents:
+  - 配置 IP Live System Manager（主/备 IP、连接状态、多播地址、HITLESS FAILOVER）
+  - 配置 NMOS IS-04/IS-05 与 RDS 发现
+  - 配置 Ember+、SNMP/SNMP TRAP、TSL UMD
+  - 判断各协议的前置选件与互斥关系
+  keywords:
+  - IP Live
+  - LSM
+  - ST2110
+  - NMOS
+  - RDS
+  - Ember+
+  - SNMP
+  - TSL UMD
+  - HITLESS FAILOVER
+  - multicast
+  card: cards/ccu-ip-live.md
+  frontmatter:
+    description: '何时用: 配置 ST2110 全 IP 制作的 LSM、NMOS/RDS、Ember+、SNMP、TSL UMD、多播地址与冗余。触发词: IP Live、LSM、ST2110、NMOS、Ember+、SNMP、TSL UMD、多播。何时不用: 基础 IP 编址用 ccu-network-setup；PTP 同步用 ccu-genlock-sync。'
+    tags:
+    - procedure
+    - ip
+    - integration
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 81-85 页（N06-N16）
+  also_read:
+  - ccu-network-setup
+  - ccu-genlock-sync
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 判据大体通过，复用偏弱且强依赖 HKCU-SFP50 选件；降为能力卡。
+
+- capability_id: cap.hdcu.web-menu
+  revision: 1
+  status: active
+  slug: ccu-web-menu
+  title: Web 菜单远程运维
+  importance: medium
+  importance_rationale: 映射 task-09（通过 Web 菜单远程配置与监控）。BOOK_OVERVIEW §4 标注"远程运维手段；仅支持 Chrome"。吸收 4 条 verified 候选（f19、f20、p38、p39）。
+  one_liner: 用 Chrome 访问本机 IP 打开 Web 菜单，可远程配置、看 CCU 信息列表与执行 OSD 操作；菜单锁定开关 ON 时无法用 Web 配置；SERVICE DISCOVERY 关闭可减少网络负载但本机不再被其他 CCU 发现。
+  intents:
+  - 访问并操作 Web 菜单（远程配置与监控）
+  - 启用 CCU 信息列表与服务发现
+  - 用 Web 菜单做版本升级、许可证、日志下载、重启
+  - 排查 Web 菜单打不开或布局错乱
+  keywords:
+  - Web 菜单
+  - OSD
+  - CCU 信息列表
+  - SERVICE DISCOVERY
+  - Chrome
+  - 远程配置
+  - web menu
+  card: cards/ccu-web-menu.md
+  frontmatter:
+    description: '何时用: 用浏览器远程配置/监控 CCU、启用 CCU 信息列表、Web 端升级或许可证操作、排查 Web 菜单异常。触发词: Web 菜单、OSD、CCU 信息列表、服务发现、远程配置。何时不用: 前面板本机菜单操作用 ccu-menu-operation；IP 编址用 ccu-network-setup。'
+    tags:
+    - procedure
+    - remote
+    - web
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 20-23 页、第 80 页（N03）
+  also_read:
+  - ccu-menu-operation
+  - ccu-network-setup
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但属运维手段而非独立工程任务，且依赖网络卡，降为能力卡。
+
+- capability_id: cap.hdcu.file-log
+  revision: 1
+  status: active
+  slug: ccu-file-log
+  title: CCU 文件与日志管理
+  importance: high
+  importance_rationale: 映射 task-10/11（CCU 文件存/取/USB；日志管理与导出）。BOOK_OVERVIEW §4 标注"换机/故障恢复的生命线"。吸收 3 条 verified 候选（f21、f22、f37）。
+  one_liner: CCU 文件最多 5 个，RECALL 会加载全部菜单设置但不含 LAN-COM 的 IP/子网/网关；USB 路径固定 /MSSONY/PRO/CAMERA/HDCU5000；日志最多保存 30 天，且更改 DATE&TIME 会删除本机全部日志。
+  intents:
+  - 保存/读取 CCU 文件（最多 5 个）
+  - 通过 USB 导出/导入 CCU 文件与日志
+  - 命名与清除 CCU 文件
+  - 判断 RECALL 不覆盖哪些设置、日志的保存期限与清空风险
+  keywords:
+  - CCU 文件
+  - FILE INDEX
+  - RECALL
+  - STORE
+  - USB
+  - 日志
+  - LOG
+  - 备份
+  - ccu file
+  card: cards/ccu-file-log.md
+  frontmatter:
+    description: '何时用: 保存/读取 CCU 文件、USB 导出导入、命名与清除文件、导出或清空日志、排查设置丢失。触发词: CCU 文件、RECALL、STORE、USB、日志、备份、/MSSONY/PRO/CAMERA/HDCU5000。何时不用: RCP 面板侧场景/参考文件用 scene-files 与 file-backup；规格速查用 ccu-specs-reference。'
+    tags:
+    - procedure
+    - file
+    - backup
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 78 页（F01-F02）、第 23 页（Web 端 CCU File）
+  also_read:
+  - file-backup
+  - ccu-menu-operation
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；与 RCP 侧 file-backup 是"两台设备各自的文件管理"，保持为两张能力卡以避免误合并；本卡降为 router 以控预算。
+
+- capability_id: cap.hdcu.panel-diagnostics
+  revision: 1
+  status: active
+  slug: ccu-panel-diagnostics
+  title: 前面板灯语诊断
+  importance: critical
+  importance_rationale: 映射 task-12（看灯识故障）。BOOK_OVERVIEW §4 标注"排障第一入口；表格型知识易翻错"。吸收 3 条 verified 候选（f23、f30、p61）。
+  one_liner: CCU 前面板用 CABLE ALARM（OPEN/SHORT）、CABLE CONDITION（4 级颜色）、NETWORK（4 态闪烁）、ALARM、FAN STOP、SIGNAL BAR、POWER（CAM/MAIN）一组灯语定位故障层级，配合错误消息表（CCU:XXX …）判断；手册只给现象不给处置。
+  intents:
+  - 看 CCU 前面板指示灯判断故障层级
+  - 查错误消息表（CCU:XXX POWER/PLD/TEMP/FAN/CABLE/GENLOCK…）含义
+  - 判断摄像机供电、光纤电缆、风扇、同步状态
+  - 区分"主机侧告警"与"面板侧告警"
+  keywords:
+  - 指示灯
+  - CABLE ALARM
+  - CABLE CONDITION
+  - ALARM
+  - FAN STOP
+  - SIGNAL BAR
+  - 错误消息
+  - 灯语
+  - diagnostics
+  card: cards/ccu-panel-diagnostics.md
+  frontmatter:
+    description: '何时用: 看 CCU 前面板灯判故障、查错误消息含义、判断供电/光纤/风扇/同步状态。触发词: 指示灯、CABLE ALARM、ALARM、FAN STOP、SIGNAL BAR、错误消息、灯语。何时不用: RCP 面板侧灯语用 led-diagnostics；状态画面判读用 ccu-status-screen；硬件自诊断用 ccu-diagnosis-menu；两端联合排障用 system-troubleshooting。'
+    tags:
+    - troubleshooting
+    - diagnostics
+    - led
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 9-10 页（前面板）、第 88 页（错误消息表）
+  also_read:
+  - ccu-status-screen
+  - ccu-diagnosis-menu
+  - system-troubleshooting
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；与 RCP 侧 led-diagnostics 是"两台设备各自的灯语"，保持为两张卡避免误合并；本卡降为 router 以控预算。
+
+- capability_id: cap.hdcu.status-screen
+  revision: 1
+  status: active
+  slug: ccu-status-screen
+  title: 状态画面判读
+  importance: high
+  importance_rationale: 映射 task-13（解读状态画面 11 页）。BOOK_OVERVIEW §4 标注"现场巡检核心"。吸收 5 条 verified 候选（f24、f36、p48、p75、p76）。
+  one_liner: 状态画面共 11 页（System Status / Multi Format1-4 / Multi Format IP / Audio / Intercom / Network / IP Stream / Alarm），需先把 SDI-OUT3/4 的 MONITOR 设为 M 或接 CHARACTER 接口；未连接摄像机时显示"-"或"Not Detected"属正常而非故障。
+  intents:
+  - 显示并翻页查看 11 个状态画面
+  - 判读系统状态、格式、音频、对讲、网络、IP 流、告警
+  - 配置状态画面显示哪些摄像机设置项
+  - 区分"未连接占位符"与真实故障
+  keywords:
+  - 状态画面
+  - System Status
+  - Multi Format
+  - IP Stream
+  - Alarm
+  - MONITOR
+  - 巡检
+  - status screen
+  card: cards/ccu-status-screen.md
+  frontmatter:
+    description: '何时用: 显示/翻页状态画面、判读系统与格式与网络状态、配置显示项、区分占位符与故障。触发词: 状态画面、System Status、Multi Format、IP Stream、Alarm、MONITOR=M。何时不用: 前面板灯语用 ccu-panel-diagnostics；硬件诊断页用 ccu-diagnosis-menu。'
+    tags:
+    - procedure
+    - monitoring
+    - diagnostics
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 15-18 页、第 36-37 页（SDI-OUT3/4 MONITOR）、第 71 页（V07）
+  also_read:
+  - ccu-panel-diagnostics
+  - ccu-diagnosis-menu
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但属观测手段，与 ccu-panel-diagnostics/ccu-diagnosis-menu 构成同一排障面，降为能力卡。
+
+- capability_id: cap.hdcu.diagnosis-menu
+  revision: 1
+  status: active
+  slug: ccu-diagnosis-menu
+  title: DIAGNOSIS 硬件诊断
+  importance: medium
+  importance_rationale: 映射 task-14（用 DIAGNOSIS 菜单做板卡/电源/风扇诊断）。BOOK_OVERVIEW §4 标注"硬件级排障"。吸收 2 条 verified 候选（f25、p50）。
+  one_liner: DIAGNOSIS 菜单 D01–D06 提供板卡自诊断（VIF/TX/NET 的 OK/POWER ERROR/PLD ERROR/TEMP WARNING）、累计开机时间、型号与序列号、软件/PLD 版本、摄像机诊断、电源单元状态与风扇状态；均为只读观测，不提供处置。
+  intents:
+  - 查板卡自诊断结果与累计开机时间
+  - 查型号、序列号与各软件/PLD 版本
+  - 查电源单元与风扇运行状态
+  - 查所连摄像机的型号与 ROM 版本
+  keywords:
+  - DIAGNOSIS
+  - BOARD STATUS
+  - HOUR METER
+  - SERIAL NUMBER
+  - VERSION
+  - FAN STATUS
+  - POWER UNIT
+  - 硬件诊断
+  card: cards/ccu-diagnosis-menu.md
+  frontmatter:
+    description: '何时用: 查板卡自诊断、开机时间、型号序列号、版本、摄像机诊断、电源与风扇状态。触发词: DIAGNOSIS、BOARD STATUS、HOUR METER、VERSION、FAN STATUS、序列号。何时不用: 前面板灯语用 ccu-panel-diagnostics；状态画面用 ccu-status-screen。'
+    tags:
+    - diagnostics
+    - hardware
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 86-87 页（D01-D06）
+  also_read:
+  - ccu-panel-diagnostics
+  - ccu-status-screen
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 判据大体通过，复用偏弱（只读观测）；降为能力卡。
+
+- capability_id: cap.hdcu.audio-intercom
+  revision: 1
+  status: active
+  slug: ccu-audio-intercom
+  title: 音频 / 对讲配置
+  importance: high
+  importance_rationale: 映射 task-15（配置音频/对讲）。BOOK_OVERVIEW §4 标注"现场通信保障"。吸收 5 条 verified 候选（f26、p52–p55）。
+  one_liner: A01–A07 七个音频/对讲页面：摄像机麦克风增益、音频输出电平与延迟、PRODUCER/ENGINEER 对讲接口（CLEAR COM/4WIRE/RTS）、前面板对讲（麦克风类型绑定增益）、测试音、以及需 HKCU-SFP50 的 IP AUDIO/IP INTERCOM 音频格式串。
+  intents:
+  - 设定摄像机麦克风增益与音频输出电平
+  - 配置生产商/工程师对讲接口与侧音
+  - 配置前面板对讲（麦克风类型、增益、PGM 混音）
+  - 发送测试音与配置 IP 音频/对讲格式
+  keywords:
+  - 音频
+  - 对讲
+  - INTERCOM
+  - MIC GAIN
+  - PGM
+  - TEST TONE
+  - AES/EBU
+  - IP AUDIO
+  - audio
+  card: cards/ccu-audio-intercom.md
+  frontmatter:
+    description: '何时用: 配麦克风增益、音频输出电平与延迟、对讲接口与侧音、前面板对讲、测试音、IP 音频格式。触发词: 音频、对讲、INTERCOM、MIC GAIN、PGM、测试音、AES/EBU。何时不用: 干线与提示机用 ccu-trunk-prompter；接口规格速查用 ccu-specs-reference。'
+    tags:
+    - procedure
+    - audio
+    - intercom
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 72-74 页（A01-A07）
+  also_read:
+  - ccu-trunk-prompter
+  - ccu-specs-reference
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但属常规设备配置，降为能力卡以控预算。
+
+- capability_id: cap.hdcu.trunk-prompter
+  revision: 1
+  status: active
+  slug: ccu-trunk-prompter
+  title: 干线 / 提示机配置
+  importance: medium
+  importance_rationale: 映射 task-16（配置干线/提示机）。BOOK_OVERVIEW §4 标注"提示机与 HD 干线的前置"。吸收 1 条 verified 候选（f27，含 3 条被合并 principle）。
+  one_liner: M01/M02 两个页面：TRUNK LINE CHANNEL MODE（2CH MAX 75Kbps / 1CH MAX 150Kbps）与 INTERFACE（232C/422A）、PROMPTER CH；NETWORK TRUNK 模式三选一，且 FIBER TRANSMIT RATE=ULTRA 时固定为 NETWORK+VIDEO，HD PROMPTER 在 HDCU5000/5500 用 SDI-RET 时固定 DISABLE。
+  intents:
+  - 配置串行 TRUNK 通道模式与接口类型
+  - 配置提示机通道数
+  - 配置 NETWORK TRUNK 模式与数据速率
+  - 配置 HD/UHD 提示机的数据速率、帧同步与信号源
+  keywords:
+  - TRUNK
+  - PROMPTER
+  - NETWORK TRUNK
+  - 提示机
+  - 干线
+  - 232C
+  - 422A
+  - trunk
+  card: cards/ccu-trunk-prompter.md
+  frontmatter:
+    description: '何时用: 配串行 TRUNK 通道与接口、提示机通道、NETWORK TRUNK 模式、HD/UHD 提示机速率与信号源。触发词: TRUNK、PROMPTER、提示机、干线、NETWORK TRUNK、232C、422A。何时不用: 音频与对讲用 ccu-audio-intercom；输出格式查表用 ccu-format-lookup。'
+    tags:
+    - procedure
+    - trunk
+    - prompter
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 75 页（M01-M02）
+  also_read:
+  - ccu-audio-intercom
+  - ccu-format-lookup
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: false
+      independent_eval: true
+    notes: 判据大体通过；内容较窄且强受 FIBER TRANSMIT RATE 约束，降为能力卡。
+
+- capability_id: cap.hdcu.menu-operation
+  revision: 1
+  status: active
+  slug: ccu-menu-operation
+  title: 本机菜单操作与可编配按钮
+  importance: medium
+  importance_rationale: 映射 task-17（前面板菜单操作与可编配按钮）。BOOK_OVERVIEW §4 标注"无监视器时的本机操作"。吸收 6 条 verified 候选（f28、f29、f33、f34、p66、p80）。
+  one_liner: 用 DISP/MENU 控制杆、CANCEL/ENTER 控制杆与 CONTROL 旋钮操作本机菜单（含字符串输入 INS/DEL/RET/END/ESC）；菜单锁定开关控制操作区；可编配按钮取值 NONE/BARS/CAM POWER/FORCE LEGACY/OPTICAL SIGNAL；CAMERA MENU CTRL=ON 时 CCU 菜单不可用。
+  intents:
+  - 进入/退出本机菜单并更改设定
+  - 输入字符串（如 BAR CHARACTER）
+  - 分配可编配按钮与前面板显示
+  - 处理菜单锁定、菜单恢复与摄像机菜单切换
+  keywords:
+  - 菜单操作
+  - DISP/MENU
+  - CONTROL 旋钮
+  - 可编配按钮
+  - 菜单锁定
+  - 字符串输入
+  - menu operation
+  card: cards/ccu-menu-operation.md
+  frontmatter:
+    description: '何时用: 本机菜单进入/改值/字符串输入/退出、分配可编配按钮、处理菜单锁定与摄像机菜单切换。触发词: 菜单操作、DISP/MENU、CONTROL 旋钮、可编配按钮、菜单锁定、字符串输入。何时不用: Web 端操作用 ccu-web-menu；RCP 面板自定义用 customization。'
+    tags:
+    - procedure
+    - operation
+    - ui
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 9-10 页、第 18-19 页、第 76-77 页（M03、M08）
+  also_read:
+  - ccu-web-menu
+  - customization
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；属基础操作面，降为能力卡。
+
+- capability_id: cap.hdcu.specs-reference
+  revision: 1
+  status: active
+  slug: ccu-specs-reference
+  title: 接口 / 规格 / 环境速查
+  importance: medium
+  importance_rationale: 映射 task-18（查规格/接口/环境红线）。BOOK_OVERVIEW §4 标注"施工与备件依据；数值必须零改写"。吸收 4 条 verified 候选（p65、p67、p68、p69），并承载 f38/p62-p64/p73 等 reference 项。
+  one_liner: 三型号（HDCU5000/5500/3500）与四块选件板（HKCU-FB50/SDI50/SFP50/SM50）的电源、电流、温度、质量、尺寸、输入/输出接口清单，以及接口信号功能随 I/O 方向变化的取值规则、固定项汇总、SDI ANCILLARY DATA 标准年份与使用环境红线——全部原样收录，禁止换算。
+  intents:
+  - 查三型号与选件板的规格参数（电源/电流/温度/质量/尺寸）
+  - 查接口清单与信号规格
+  - 查"固定为…"的不可改项汇总
+  - 查使用环境与保养红线
+  keywords:
+  - 规格
+  - 接口
+  - 电源
+  - 温度
+  - 尺寸
+  - 固定项
+  - 环境
+  - 保养
+  - specs
+  card: cards/ccu-specs-reference.md
+  frontmatter:
+    description: '何时用: 查三型号与选件板规格、接口清单、固定不可改项、使用环境与保养红线。触发词: 规格、接口、电源、温度、尺寸、固定项、环境、保养。何时不用: 用数值做工程决策时走对应能力卡；RCP 面板侧规格速查用 specs-reference。'
+    tags:
+    - lookup
+    - specs
+    - reference
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 88-94 页（附录与规格）、第 29-31 页（S02-S03）、第 76 页（M07）
+  also_read:
+  - ccu-transport-setup
+  - specs-reference
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: false
+    notes: 纯查表型，输出断言可写但"方法"成分弱；降为能力卡（与 RCP 侧 specs-reference 同处理）。
+
+- capability_id: cap.system.integration
+  revision: 1
+  status: active
+  slug: system-integration
+  title: 整系统组网与联调
+  importance: critical
+  importance_rationale: 跨书能力，映射 RCP task-01 + CCU task-01/07 的接缝。BOOK_OVERVIEW（CCU）§3 指出 RCP 手册反复说行为"因所连设备而异"，而 CCU 手册正是那个"所连设备"的完整定义；两端编号/IP/选件的一致性没有任何一本单独给出。合并包的核心增量。
+  one_liner: RCP 面板与 CCU 主机是同一系统的两端：面板经 RCP/CNU 接口（CCA-5）连到 CCU 的 RCP/CNU 接口（并取电），两端的 CNS 模式、CCU 编号、主设备 IP 必须一致且全系统唯一；CCU 侧的传输方式与选件决定整系统格式能力；投运须按"改 CNS 重启所有摄像机系统 / 改 IP Live PORT 重启本机"的顺序收尾。
+  intents:
+  - 规划 RCP 面板 + CCU 主机 + 摄像机的整系统连接
+  - 核对两端 CNS 模式、CCU 编号与 IP 的一致性
+  - 建立选件与两端能力的映射（SFP50/SDI50/SM50/UHD35/CNFG50/SNMP50）
+  - 按正确顺序完成整系统投运与验收
+  keywords:
+  - 整系统
+  - 联调
+  - 组网
+  - RCP/CNU
+  - CCU 编号
+  - 一致性
+  - 投运
+  - system integration
+  card: cards/system-integration.md
+  frontmatter:
+    description: '何时用: 规划或核对 RCP 面板与 CCU 主机的整系统连接、两端编号/IP 一致性、选件映射、投运顺序与验收。触发词: 整系统、联调、组网、两端、RCP/CNU、CCU 编号一致性、投运。何时不用: 单设备侧配置走 network-setup（RCP）或 ccu-network-setup/ccu-transport-setup（CCU）；单设备侧判读走 led-diagnostics 或 ccu-panel-diagnostics。'
+    tags:
+    - cross-book
+    - integration
+    - commissioning
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 3-8 页、第 12-13 页（RCP/CNU 接口）、第 79 页（N02）
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 5-8 页、第 12 页（RCP/CNU 接口）、第 18-20 页
+  also_read:
+  - network-setup
+  - ccu-transport-setup
+  - system-troubleshooting
+  promotion:
+    destination: router
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 判据通过；但跨书卡若单独发现，会与两端单设备卡抢触发，故降为 router（经统一入口可达）。
+
+- capability_id: cap.system.troubleshooting
+  revision: 1
+  status: active
+  slug: system-troubleshooting
+  title: 整系统联合排障
+  importance: critical
+  importance_rationale: 跨书能力，映射 RCP task-08/12 + CCU task-12/13/14 的接缝。两端都有 NETWORK 与 ALARM 灯但判读体系不同（RCP 面板侧 vs CCU 主机侧），单看任一本都会误判；BOOK_OVERVIEW（CCU）§3 亦指出手册只给现象不给处置。合并包的核心增量。
+  one_liner: 排障时先把现象归到"面板侧 / 主机侧 / 链路侧"三层：面板侧看 RCP 的 NETWORK/ALARM/CABLE/CAM PW 灯与激活状态，主机侧看 CCU 的 CABLE ALARM/CABLE CONDITION/FAN STOP 灯、状态画面 11 页与错误消息表、DIAGNOSIS 只读诊断，链路侧看两端 GENLOCK/PTP 与格式一致性；两端同名 NETWORK/ALARM 灯含义不同，是最易误判处。
+  intents:
+  - 面对"系统不通/画面没信号/面板拧不动"先定故障层级
+  - 联合判读两端灯语与状态画面
+  - 用错误消息表与 DIAGNOSIS 缩小范围
+  - 区分面板侧控制权问题与主机侧链路/格式问题
+  keywords:
+  - 联合排障
+  - 系统不通
+  - 没信号
+  - 灯语对照
+  - 故障层级
+  - 状态画面
+  - 错误消息
+  - system troubleshooting
+  card: cards/system-troubleshooting.md
+  frontmatter:
+    description: '何时用: 系统级故障（不通/无信号/不同步/拧不动）先定层级、联合判读两端灯语与状态画面、用错误消息与诊断缩小范围。触发词: 联合排障、系统不通、没信号、灯语对照、故障层级。何时不用: 只看 RCP 面板灯用 led-diagnostics；只看 CCU 主机灯用 ccu-panel-diagnostics；只看状态画面用 ccu-status-screen。'
+    tags:
+    - cross-book
+    - troubleshooting
+    - diagnostics
+  source_evidence:
+  - source_id: sony-hdcu-5000-5500-3500-manual-2019
+    location: 第 9-10 页、第 15-18 页、第 86-88 页
+  - source_id: sony-rcp-3500-3501-manual-2019
+    location: 第 10 页、第 15 页、第 48-51 页
+  also_read:
+  - led-diagnostics
+  - ccu-panel-diagnostics
+  - ccu-status-screen
+  - ccu-diagnosis-menu
+  promotion:
+    destination: promoted
+    gate:
+      independent_intent: true
+      independent_contract: true
+      independent_run: true
+      independent_reuse: true
+      independent_eval: true
+    notes: 五条判据全通过。"整系统排障"是典型可独立提出的用户意图，且是两本单独说明书都无法覆盖的增量。合并包可发现入口 = 1 router + 7 promoted = 8（软预算上限），本条占其中一席。

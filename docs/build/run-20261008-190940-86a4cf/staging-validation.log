@@ -1,0 +1,6 @@
+  skill: .staging-run-20261008-190940-86a4cf-dist   87 行   16978 字节
+
+共扫描 36 个 .md，其中 1 个 SKILL.md
+WARN  [name-dir] .staging-run-20261008-190940-86a4cf-dist\SKILL.md: name `sony-ccu-rcp-system` 与目录名 `.staging-run-20261008-190940-86a4cf-dist` 不一致
+
+结果: 0 errors, 1 warnings

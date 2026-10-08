@@ -1,0 +1,27 @@
+[
+ {
+  "case_id": "o32-ccu-web-menu-fbutton",
+  "prompt": "Web 菜单里用 f 按钮下载日志，下载下来的文件名是什么？f 按钮的上下文菜单里还有哪些功能？",
+  "card_path": "references/capabilities/ccu-web-menu.md"
+ },
+ {
+  "case_id": "o33-ccu-file-log-slot",
+  "prompt": "本机最多能存几个 CCU 文件？文件槽是怎么编号和命名的？想全清空怎么办？",
+  "card_path": "references/capabilities/ccu-file-log.md"
+ },
+ {
+  "case_id": "o34-ccu-trunk-prompter-source",
+  "prompt": "HD PROMPTER 的信号源可以从哪里取？UHD PROMPTER 呢？各自的数据速率可选哪些？",
+  "card_path": "references/capabilities/ccu-trunk-prompter.md"
+ },
+ {
+  "case_id": "o35-system-integration-physical",
+  "prompt": "整系统投运做物理层核对：面板和 CCU 之间用 CCA-5 连，最长能拉多少米？改用 LAN 呢？用纯 LAN 连接时还要额外注意什么？",
+  "card_path": "references/capabilities/system-integration.md"
+ },
+ {
+  "case_id": "o36-system-troubleshooting-lamps",
+  "prompt": "整系统排查时，主机侧要看哪几个链路与供电相关的灯？它们各自代表什么？",
+  "card_path": "references/capabilities/system-troubleshooting.md"
+ }
+]
