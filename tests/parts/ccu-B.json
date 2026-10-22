@@ -1,0 +1,202 @@
+{
+  "trigger_cases": [
+    {
+      "case_id": "t23-ccu-panel-diagnostics-trigger",
+      "prompt": "机房里那台 CCU 机箱前面板，有个叫 CABLE ALARM 的灯亮着，摄像机这边也没电，是不是线的问题？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-panel-diagnostics",
+      "forbidden_cards": ["led-diagnostics", "ccu-status-screen", "ccu-diagnosis-menu"],
+      "notes": "灯名 CABLE ALARM 是 CCU 主机前面板的专属灯（第 10 页），且用户描述的是『机箱前面板』而非遥控面板，落本卡。led-diagnostics 是 RCP 面板侧灯语（CAM PW/NETWORK/ALARM/CABLE），与 CCU 主机侧同名不同物，是最易混的近邻；ccu-status-screen 负责状态画面全量判读（读 11 页），本卡只做灯语分层；ccu-diagnosis-menu 是硬件自诊断读值，属『复核』下一步而非入口。"
+    },
+    {
+      "case_id": "t24-ccu-status-screen-trigger",
+      "prompt": "现场巡检，我想把 CCU 上那 11 页状态画面一页页翻着看一遍，从前面板怎么进、怎么换页？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-status-screen",
+      "forbidden_cards": ["ccu-diagnosis-menu", "ccu-panel-diagnostics"],
+      "notes": "『11 页状态画面』『翻页』是本卡独占信号（第 15-18 页，页序 01/11–11/11）。ccu-diagnosis-menu 读的是硬件级自诊断（板卡/电源/风扇/版本，D01–D06），不是运行态逐页；ccu-panel-diagnostics 只管看灯定位层级，不负责翻页读全量。"
+    },
+    {
+      "case_id": "t25-ccu-diagnosis-menu-trigger",
+      "prompt": "这台 CCU 报错了，我想知道到底是哪块板卡、电源还是风扇坏了，那个自诊断菜单在哪儿读？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-diagnosis-menu",
+      "forbidden_cards": ["ccu-panel-diagnostics", "ccu-status-screen"],
+      "notes": "『哪块板卡/电源/风扇坏了』+『自诊断菜单』指向 DIAGNOSIS 的硬件层级定位（D01–D06，第 86-87 页）。ccu-panel-diagnostics 是看前面板灯（现象入口），本卡是把现象收敛到硬件层；ccu-status-screen 读的是运行态字段（格式/音频/网络/告警），不是板卡自诊断结果。"
+    },
+    {
+      "case_id": "t26-ccu-audio-intercom-trigger",
+      "prompt": "我们现场那套对讲，摄影师戴耳机老听到自己说话，太吵了，生产商线路和侧音取消这些在哪儿设？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-audio-intercom",
+      "forbidden_cards": ["ccu-trunk-prompter", "ccu-specs-reference", "led-diagnostics"],
+      "notes": "『侧音取消』『生产商线路』正是 A03 INTERCOM 的 SIDE TONE CANCEL 与 PRODUCER INTERFACE（第 72 页），落本卡。ccu-trunk-prompter 管干线/提示机（M01/M02），与对讲是两套东西；ccu-specs-reference 只给 INTERCOM 接口电气规格（0 dBu/–14 dBu）等纯数值，不做配置；led-diagnostics 只判对讲异常的灯语，不负责把配置改对。"
+    },
+    {
+      "case_id": "t27-ccu-trunk-prompter-trigger",
+      "prompt": "提示机（提词器）信号要从 CCU 的哪个 SDI 口进来，菜单里那个 HD PROMPTER 的 SOURCE 怎么选？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-trunk-prompter",
+      "forbidden_cards": ["ccu-audio-intercom", "ccu-specs-reference", "ccu-menu-operation"],
+      "notes": "『HD PROMPTER 的 SOURCE』是 M02 的提示机源项（SDI-I/O4 / IP-RET3，第 75 页），落本卡。ccu-audio-intercom 管音频/对讲（A01–A07），HD TRUNK 的音频格式才归彼卡；ccu-specs-reference 只给 PROMPTER 接口的 1.0 Vp-p/75 欧姆等规格数值，不做配置；ccu-menu-operation 只讲『怎么进菜单改值』的操作通法，不讲『设什么值』。"
+    },
+    {
+      "case_id": "t28-ccu-menu-operation-trigger",
+      "prompt": "CCU 前面板想改设置，可菜单怎么按都没反应，是不是坏了？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-menu-operation",
+      "forbidden_cards": ["ccu-web-menu", "customization"],
+      "notes": "『前面板菜单按不动』的公共动作层排查（CAMERA MENU CTRL=ON 只剩摄像机菜单、菜单锁定开关 ON 锁面板与 Web，第 10/76 页）落本卡。ccu-web-menu 管 Web 菜单的访问/升级/日志下载流程，本卡只收录『锁定开关 ON → Web 也无法配置』这一条联动；customization 是 RCP 侧的功能分配/自定义着色，与 CCU 本机菜单操作无关。"
+    },
+    {
+      "case_id": "t29-ccu-specs-reference-trigger",
+      "prompt": "我们要给 HDCU5500 配机柜，它工作温度范围是多少、最大电流多少、机器多重？",
+      "expected": "should_trigger",
+      "expected_card": "ccu-specs-reference",
+      "forbidden_cards": ["specs-reference", "environment-care", "ccu-transport-setup"],
+      "notes": "纯 CCU 型号规格查询（三型号一般规格表，第 90 页），落本卡。RCP 侧 specs-reference 是面板规格（面板尺寸/EXT I/O 针脚等），查的是 CCU 主机型号参数时最易混；environment-care（RCP 侧）做环境红线的保养动作决策，本卡只『查询→原样回报』不做决策；ccu-transport-setup 管传输方式与选件板安装决策，不提供温度/电流/质量数值。"
+    },
+    {
+      "case_id": "t30-system-integration-trigger",
+      "prompt": "新机位刚上架：RCP-3500 面板、HDCU5500、摄像机，线都接了，怎么一步步把整套系统调通、投运？",
+      "expected": "should_trigger",
+      "expected_card": "system-integration",
+      "forbidden_cards": ["network-setup", "ccu-transport-setup", "ccu-network-setup"],
+      "notes": "『面板+CCU+摄像机整系统投运』是跨两端联调（投运顺序、两端 CNS/编号/IP 一致性、重启范围，第 5/79 页等），落本卡。network-setup 只做 RCP 单面板侧的 CNS/IP/编号配置；ccu-transport-setup 只做 CCU 单主机侧的传输方式与选件决策；ccu-network-setup 只做 CCU 侧 IP/CNS/PTP 配置——三者都是单端，不覆盖『两端接缝』。"
+    },
+    {
+      "case_id": "t31-system-troubleshooting-trigger",
+      "prompt": "面板上的 NETWORK 灯在闪，CCU 前面板的 NETWORK 灯也在闪——这俩是一个意思吗？帮我判断故障到底出在哪一段。",
+      "expected": "should_trigger",
+      "expected_card": "system-troubleshooting",
+      "forbidden_cards": ["led-diagnostics", "ccu-panel-diagnostics", "ccu-status-screen"],
+      "notes": "同时提及面板侧与主机侧的 NETWORK 灯并要求联合定位，正是本卡核心陷阱『同名不同义』与两端对照排障（查表 1，RCP 第 15 页 c / CCU 第 10 页 h）。led-diagnostics 只判 RCP 单侧 5 灯；ccu-panel-diagnostics 只判 CCU 主机单侧灯语；ccu-status-screen 只读主机状态画面——单侧卡都无法回答『两端对照』。"
+    }
+  ],
+  "output_cases": [
+    {
+      "case_id": "o23-ccu-panel-diagnostics-task",
+      "prompt": "CCU 前面板 CABLE ALARM 灯亮起时，对摄像机供电有什么影响？OPEN 和 SHORT 分别是什么意思？",
+      "card": "ccu-panel-diagnostics",
+      "assertions": [
+        {"kind": "contains", "value": "CABLE ALARM", "note": "灯名原样"},
+        {"kind": "regex", "value": "OPEN|SHORT", "note": "两态"},
+        {"kind": "contains", "value": "CAMERA FIBER", "note": "OPEN 态所涉接口名原样"},
+        {"kind": "regex", "value": "不(会)?对摄像机供电", "note": "两态共性后果，卡内原文为『不会对摄像机供电』/『不对摄像机供电』"}
+      ],
+      "notes": "真值来源：该卡 E 段「CABLE ALARM（第 10 页）」状态→含义表 + R 段第 10 页原文；两态均不供电见 E 段处置分支与 B 段 ce28。"
+    },
+    {
+      "case_id": "o24-ccu-status-screen-task",
+      "prompt": "状态画面用 SDI OUT 3 接监视器时看不到画面，要先把哪个菜单项设成什么？进入和翻页分别用哪个控件？",
+      "card": "ccu-status-screen",
+      "assertions": [
+        {"kind": "contains", "value": "DISP/MENU", "note": "进入/退出的控制杆名"},
+        {"kind": "contains", "value": "CONTROL", "note": "翻页用的旋钮名"},
+        {"kind": "contains", "value": "MONITOR", "note": "必须设的菜单项名"},
+        {"kind": "contains", "value": "SDI-OUT3", "note": "菜单路径中的口名原样"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 1（前置：SYSTEM CONFIG → <OUTPUT FORMAT1> → SDI-OUT3/4 → MONITOR = M）与步骤 2（DISP/MENU 拨 DISP、转 CONTROL 旋钮换页）；R 段第 15 页。"
+    },
+    {
+      "case_id": "o25-ccu-diagnosis-menu-task",
+      "prompt": "帮我把 HDCU5000 的 DIAGNOSIS 过一遍：风扇状态页（D06）在 HDCU5000 上会有哪些项？累计开机时间最多能显示到多少？",
+      "card": "ccu-diagnosis-menu",
+      "assertions": [
+        {"kind": "contains", "value": "FRONT FAN1/2", "note": "HDCU5000 专属风扇项名"},
+        {"kind": "contains", "value": "FRONT FAN4", "note": "HDCU5000 专属风扇项名"},
+        {"kind": "contains", "value": "99999 H", "note": "开机时间显示上限，原样含单位 H"},
+        {"kind": "regex", "value": "仅(限)?\\s*HDCU5000", "note": "D06 项随型号显隐的限定表述"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 2（D06 FAN STATUS / D01 HOUR METER）+ B 段「型号差异」（`FRONT FAN1/2`、`FRONT FAN4` 仅 HDCU5000）；R 段第 86-87 页。"
+    },
+    {
+      "case_id": "o26-ccu-audio-intercom-task",
+      "prompt": "生产商对讲线路选了 4WIRE，为什么 SIDE TONE CANCEL 和 TERMINATION 改不了？另外如果换成碳素麦克风，增益应该按多少？",
+      "card": "ccu-audio-intercom",
+      "assertions": [
+        {"kind": "contains", "value": "TERMINATION", "note": "菜单项名原样"},
+        {"kind": "contains", "value": "CLEAR COM", "note": "可设该二项的线路制式之一"},
+        {"kind": "contains", "value": "CARBON", "note": "麦克风类型名"},
+        {"kind": "contains", "value": "20 dB", "note": "CARBON 绑定的固定增益"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 4（A03：SIDE TONE CANCEL/TERMINATION 仅 CLEAR COM/RTS 可设）与步骤 5（A04：CARBON 电源 20 dB）；R 段第 72/73 页。"
+    },
+    {
+      "case_id": "o27-ccu-trunk-prompter-task",
+      "prompt": "HDCU5000 上用了 SDI-RET，为什么 HD PROMPTER 是灰的、显示 DISABLE？另外 FIBER TRANSMIT RATE 设成 ULTRA 后 NETWORK TRUNK 为什么改不动？",
+      "card": "ccu-trunk-prompter",
+      "assertions": [
+        {"kind": "contains", "value": "ULTRA", "note": "速率档名原样"},
+        {"kind": "contains", "value": "NETWORK+VIDEO", "note": "ULTRA 下的固定值"},
+        {"kind": "contains", "value": "SDI-RET", "note": "触发固定规则的条件"},
+        {"kind": "contains", "value": "DISABLE", "note": "HD PROMPTER 的固定取值"},
+        {"kind": "contains", "value": "SDI-I/O4", "note": "HD PROMPTER 的 SOURCE 之一"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 2（M02：ULTRA→NETWORK TRUNK 固定 NETWORK+VIDEO）与步骤 3（SDI-RET 时 HD PROMPTER 固定 DISABLE）、步骤 4（SOURCE 选 SDI-I/O4 或 IP-RET3）；R 段第 75 页。"
+    },
+    {
+      "case_id": "o28-ccu-menu-operation-task",
+      "prompt": "CCU 前面板菜单按不动怎么排查？另外想在菜单里输入字符串（比如 BAR CHARACTER），这个输入流程是什么？",
+      "card": "ccu-menu-operation",
+      "assertions": [
+        {"kind": "contains", "value": "CAMERA MENU CTRL", "note": "菜单可用性铁律的项名原样"},
+        {"kind": "contains", "value": "BAR CHARACTER", "note": "书中字符串输入示例项目名"},
+        {"kind": "contains", "value": "END", "note": "字符串输入注册键"},
+        {"kind": "regex", "value": "INS|DEL|RET", "note": "字符串输入功能键"},
+        {"kind": "regex", "value": "菜单锁定|锁定开关", "note": "面板被锁的第一嫌疑项"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 5（字符串输入：INS/DEL/RET/END/ESC，示例项 VIDEO/MONITOR t BAR CHARACTER）与步骤 8（CAMERA MENU CTRL、菜单锁定开关）；R 段第 19/76/10 页。"
+    },
+    {
+      "case_id": "o29-ccu-specs-reference-task",
+      "prompt": "HDCU5500 的电源要求、电流消耗、工作温度和质量分别是多少？HKCU-SFP50 的功耗又是多少？",
+      "card": "ccu-specs-reference",
+      "assertions": [
+        {"kind": "contains", "value": "4.5 A (最大)", "note": "HDCU5500 电流消耗，原样"},
+        {"kind": "contains", "value": "约 6.4 kg", "note": "HDCU5500 质量，原样"},
+        {"kind": "contains", "value": "43 W", "note": "HKCU-SFP50 功耗，原样"},
+        {"kind": "regex", "value": "100 V 至 240 V 交流", "note": "HDCU5500 电源要求原文"},
+        {"kind": "regex", "value": "10 °C 至 \\+40 °C", "note": "HDCU5500 工作温度原文（–10 °C 至 +40 °C）"}
+      ],
+      "notes": "真值来源：该卡 E 段 ① 三型号一般规格表（HDCU5500 列，第 90 页）与 ② 四块选件板规格表（HKCU-SFP50 功耗列，第 94 页）；数值零改写。"
+    },
+    {
+      "case_id": "o30-system-integration-task",
+      "prompt": "RCP 面板 + CCU 主机 + 摄像机整系统投运，两端的 CNS 模式和编号/IP 要怎么核对？改完 CNS 之后要重启什么？",
+      "card": "system-integration",
+      "assertions": [
+        {"kind": "contains", "value": "重启所有摄像机系统", "note": "RCP 侧改 CNS 后的强制收尾动作原文"},
+        {"kind": "contains", "value": "CNS MODE", "note": "两端须同值的模式项名"},
+        {"kind": "contains", "value": "CCU NO", "note": "CCU 侧编号项名"},
+        {"kind": "contains", "value": "CCA-5", "note": "面板↔CCU 控制链电缆名"},
+        {"kind": "contains", "value": "200 m", "note": "CCA-5 最大连接长度，原样"}
+      ],
+      "notes": "真值来源：该卡 E 段步骤 4（两端 CNS 一致性）、步骤 5（编号/IP 唯一性）、步骤 7（投运顺序与重启：RCP 侧改 CNS→重启所有摄像机系统）；R 段（RCP 第 5 页、第 16 页；CCU 第 79 页 N02）。"
+    },
+    {
+      "case_id": "o31-system-troubleshooting-task",
+      "prompt": "面板上的 NETWORK 灯在闪，CCU 前面板的 NETWORK 灯也在闪——这俩含义一样吗？帮我判断故障到底出在哪一段。",
+      "card": "system-troubleshooting",
+      "assertions": [
+        {"kind": "contains", "value": "PTP", "note": "主机侧 NETWORK 的含义指向"},
+        {"kind": "contains", "value": "控制设备", "note": "面板侧 NETWORK 的含义指向"},
+        {"kind": "regex", "value": "同名", "note": "两端同名灯不同义的警示"},
+        {"kind": "contains", "value": "CABLE ALARM", "note": "主机侧链路/供电层灯名"},
+        {"kind": "contains", "value": "CABLE CONDITION", "note": "主机侧接收电平四级灯名"}
+      ],
+      "notes": "真值来源：该卡查表 1（两端灯语对照：面板 NETWORK『与控制设备相连』/主机 NETWORK『PTP 主站』）与 I 段『同名不同义是最大陷阱』；R 段（RCP 第 15 页 c、CCU 第 10 页 f/h）。"
+    },
+    {
+      "case_id": "o31b-system-troubleshooting-boundary",
+      "prompt": "CCU 报 CCU:PS CABLE SHORT，请给出完整的修复步骤。",
+      "card": "system-troubleshooting",
+      "assertions": [
+        {"kind": "regex", "value": "手册未给|原书未给|未给处置|不给处置|只给现象", "note": "缺输入/无处置时应显式声明留白"},
+        {"kind": "regex", "value": "转介|转\\s*哪|转对应卡|下一步查", "note": "停止编造、给出转介方向"},
+        {"kind": "contains", "value": "CCU:PS CABLE SHORT", "note": "错误消息原文，用于确认命中的是光路短路告警"}
+      ],
+      "notes": "真值来源：该卡 B 段『手册对多数错误消息只给现象/含义，不给处置步骤』+ E 段步骤 4 判停（只输出已定位层级 + 下一步查哪里 + 转哪张卡）；SKILL.md『边界与判停』亦明示 CABLE ALARM SHORT 处置属停止并声明缺口的条目。"
+    }
+  ]
+}

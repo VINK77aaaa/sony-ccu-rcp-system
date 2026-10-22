@@ -1,0 +1,186 @@
+[
+ {
+  "case_id": "t01-network-setup-trigger",
+  "prompt": "新到一台 RCP-3500，我要把它接进现有的摄像机系统。该选哪个连接模式？IP 和 RCP 编号怎么填？"
+ },
+ {
+  "case_id": "t02-mcs-operations-trigger",
+  "prompt": "多机位演播，我这台面板只能看到数值，拧旋钮没反应，是不是坏了？"
+ },
+ {
+  "case_id": "t03-led-diagnostics-trigger",
+  "prompt": "面板上 CABLE 灯亮红了，NETWORK 灯常亮，ALARM 灭着。帮我判断是哪儿的问题。"
+ },
+ {
+  "case_id": "t04-daily-operation-trigger",
+  "prompt": "开机之后每天要做哪些画质检查？AWB、ABB 那些怎么跑？"
+ },
+ {
+  "case_id": "t05-engineer-mode-security-trigger",
+  "prompt": "在 Category Select 里怎么都找不到 File 和 Maintenance 菜单，这机器是不是功能缺失？"
+ },
+ {
+  "case_id": "t06-specs-reference-reach",
+  "prompt": "EXT I/O 接口第 8 脚是什么信号，什么规格？"
+ },
+ {
+  "case_id": "t07-environment-care-reach",
+  "prompt": "触控屏脏了，手边只有纸巾，能用纸巾擦吗？"
+ },
+ {
+  "case_id": "t08-white-black-balance-reach",
+  "prompt": "手动调白平衡旋钮的时候，RGB 三个通道有顺序要求吗？"
+ },
+ {
+  "case_id": "t09-scene-files-reach",
+  "prompt": "我想读取 8 号场景文件，可是 8 号的编号灯根本不亮，是坏了吗？"
+ },
+ {
+  "case_id": "t10-file-backup-reach",
+  "prompt": "想把这块面板的设定备份到 U 盘，怎么操作？"
+ },
+ {
+  "case_id": "t11-customization-reach",
+  "prompt": "怎么把常用功能分配到一个自由按键上？"
+ },
+ {
+  "case_id": "t12-paint-adjustment-reach",
+  "prompt": "画面高光老是压不住，Paint 菜单里应该动哪个参数？"
+ },
+ {
+  "case_id": "t13-maintenance-correction-reach",
+  "prompt": "刚换了镜头，要做黑色 Shading 校正，流程是什么？"
+ },
+ {
+  "case_id": "t14-ccu-transport-setup-trigger",
+  "prompt": "刚搬来一台 HDCU5000，要跟 HDC5000 摄像机对接，走光纤的话 SYSTEM CONFIG 里 CABLE TYPE 该选哪一项？大概能拉多远？"
+ },
+ {
+  "case_id": "t15-ccu-system-format-trigger",
+  "prompt": "这台 HDCU3500 已经装了 HKCU-FB50，要做 4K，SYSTEM 该设 1.001(525) 还是 1.000(625)？CAMERA FORMAT 里有哪些能选？"
+ },
+ {
+  "case_id": "t16-ccu-format-lookup-trigger",
+  "prompt": "SDI-OUT3 这个口到底能出哪些格式？我想在画面上叠菜单字符，MONITOR 能改吗？"
+ },
+ {
+  "case_id": "t17-ccu-hdr-setup-trigger",
+  "prompt": "我想让这台摄像机同时出一路 HDR 一路 SDR，CCU 这边要怎么开？OETF 选 S-Log3 还是 HLG 好？"
+ },
+ {
+  "case_id": "t18-ccu-genlock-sync-trigger",
+  "prompt": "全 IP 演播室上电以后画面一直不同步，PTP 好像锁不上，域编号和通信模式在哪设？"
+ },
+ {
+  "case_id": "t19-ccu-network-setup-trigger",
+  "prompt": "新机要接进 MCS 多机系统，LAN-COM 的 IP 和 CCU 编号在哪设？LAN1 和 LAN2 的速度是不是必须一样？"
+ },
+ {
+  "case_id": "t20-ccu-ip-live-trigger",
+  "prompt": "要接 IP Live System Manager，主备地址和 HITLESS FAILOVER 在哪设？改完 PORT 是不是要重启？"
+ },
+ {
+  "case_id": "t21-ccu-web-menu-trigger",
+  "prompt": "想用电脑远程看这台 CCU 的设置，浏览器打开后布局全乱了，是不是必须用特定浏览器？"
+ },
+ {
+  "case_id": "t22-ccu-file-log-trigger",
+  "prompt": "这台 CCU 主板坏了要换机，怎么把原来的设置搬到新机上？恢复完网络是不是就不通了？"
+ },
+ {
+  "case_id": "t23-ccu-panel-diagnostics-trigger",
+  "prompt": "机房里那台 CCU 机箱前面板，有个叫 CABLE ALARM 的灯亮着，摄像机这边也没电，是不是线的问题？"
+ },
+ {
+  "case_id": "t24-ccu-status-screen-trigger",
+  "prompt": "现场巡检，我想把 CCU 上那 11 页状态画面一页页翻着看一遍，从前面板怎么进、怎么换页？"
+ },
+ {
+  "case_id": "t25-ccu-diagnosis-menu-trigger",
+  "prompt": "这台 CCU 报错了，我想知道到底是哪块板卡、电源还是风扇坏了，那个自诊断菜单在哪儿读？"
+ },
+ {
+  "case_id": "t26-ccu-audio-intercom-trigger",
+  "prompt": "我们现场那套对讲，摄影师戴耳机老听到自己说话，太吵了，生产商线路和侧音取消这些在哪儿设？"
+ },
+ {
+  "case_id": "t27-ccu-trunk-prompter-trigger",
+  "prompt": "提示机（提词器）信号要从 CCU 的哪个 SDI 口进来，菜单里那个 HD PROMPTER 的 SOURCE 怎么选？"
+ },
+ {
+  "case_id": "t28-ccu-menu-operation-trigger",
+  "prompt": "CCU 前面板想改设置，可菜单怎么按都没反应，是不是坏了？"
+ },
+ {
+  "case_id": "t29-ccu-specs-reference-trigger",
+  "prompt": "我们要给 HDCU5500 配机柜，它工作温度范围是多少、最大电流多少、机器多重？"
+ },
+ {
+  "case_id": "t30-system-integration-trigger",
+  "prompt": "新机位刚上架：RCP-3500 面板、HDCU5500、摄像机，线都接了，怎么一步步把整套系统调通、投运？"
+ },
+ {
+  "case_id": "t31-system-troubleshooting-trigger",
+  "prompt": "面板上的 NETWORK 灯在闪，CCU 前面板的 NETWORK 灯也在闪——这俩是一个意思吗？帮我判断故障到底出在哪一段。"
+ },
+ {
+  "case_id": "n01-awb-vs-wbb",
+  "prompt": "AWB 按钮怎么按？按下去之后灯怎么算正常？"
+ },
+ {
+  "case_id": "n02-deadpixel-triage",
+  "prompt": "画面里有个固定的白点，是不是要送修？"
+ },
+ {
+  "case_id": "n03-specs-vs-network",
+  "prompt": "CCA-5 电缆最长能拉多少米？"
+ },
+ {
+  "case_id": "n04-customize-vs-perm",
+  "prompt": "我改完自定义分配，按按钮怎么一点反应都没有？"
+ },
+ {
+  "case_id": "n05-paintmenu-vs-perm",
+  "prompt": "Category Select 里根本找不到 Paint 菜单，怎么才能调出来？"
+ },
+ {
+  "case_id": "n06-panel-lamp-vs-ccu-lamp",
+  "prompt": "面板上 CAM PW 那个灯按了没反应，是不是摄像机坏了？"
+ },
+ {
+  "case_id": "n07-ccu-lamp-vs-panel-lamp",
+  "prompt": "HDCU5500 前面板 CABLE ALARM 亮了红灯，是线坏了还是设置问题？"
+ },
+ {
+  "case_id": "n08-ccu-network-vs-panel-network",
+  "prompt": "给 CCU 设一下 CCU 编号和主设备的 IP 地址，多机系统要用。"
+ },
+ {
+  "case_id": "n09-ccu-file-vs-rcp-file",
+  "prompt": "把 CCU 现在的全部菜单设置存成一个文件，最多能存几个？"
+ },
+ {
+  "case_id": "n10-ccu-specs-vs-panel-specs",
+  "prompt": "HDCU5500 的质量和最大电流是多少？"
+ },
+ {
+  "case_id": "n11-whole-system-vs-single-end",
+  "prompt": "整套系统不通：面板在、CCU 也在，但画面没信号。第一步该看哪一层？"
+ },
+ {
+  "case_id": "n12-paint-vs-ccu-hdr",
+  "prompt": "画面高光有点过曝，想把拐点压一压，面板上怎么调？"
+ },
+ {
+  "case_id": "n13-commissioning-vs-arbitration",
+  "prompt": "新装了一套 RCP 加 CCU，按什么顺序把它整系统投运起来、最后怎么验收？"
+ },
+ {
+  "case_id": "n14-out-of-scope-camera-firmware",
+  "prompt": "HDC-5500 摄像机机身的固件怎么升级？"
+ },
+ {
+  "case_id": "n15-out-of-scope-book-summary",
+  "prompt": "帮我写一篇这两本说明书的读后感，顺便分析下作者的写作风格。"
+ }
+]

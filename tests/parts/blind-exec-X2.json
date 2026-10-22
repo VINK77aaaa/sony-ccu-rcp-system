@@ -1,0 +1,57 @@
+[
+ {
+  "case_id": "o14-ccu-transport-setup-task",
+  "prompt": "HDCU5000 用光纤复合缆连 HDC5000 摄像机，我要在 SYSTEM CONFIG 里设哪些菜单项？FIBER TRANSMIT RATE 有哪些取值？",
+  "card_path": "references/capabilities/ccu-transport-setup.md"
+ },
+ {
+  "case_id": "o15-ccu-system-format-task",
+  "prompt": "SYSTEM 设成 1.001(525)、FIBER TRANSMIT RATE 设成 ULTRA 时，CAMERA FORMAT 能选哪些格式？其中哪些能启用 BIT DEPTH，取值是什么？",
+  "card_path": "references/capabilities/ccu-system-format.md"
+ },
+ {
+  "case_id": "o16-ccu-format-lookup-task",
+  "prompt": "FIBER TRANSMIT RATE=HIGH、SYSTEM=1.001(525)、CAMERA FORMAT=1080/59.94P，SDI-OUT3/4 能出哪些格式串？要查哪一页？",
+  "card_path": "references/capabilities/ccu-format-lookup.md"
+ },
+ {
+  "case_id": "o17-ccu-hdr-setup-task",
+  "prompt": "摄像机支持 Live HDR，我要在 CCU 上开 LIVE HDR，HDR OETF 和色彩空间怎么设？4K COLOR SPACE 能单独改吗？",
+  "card_path": "references/capabilities/ccu-hdr-setup.md"
+ },
+ {
+  "case_id": "o17b-ccu-hdr-setup-boundary",
+  "prompt": "LIVE HDR 模式下 HDR 输出到底不支持哪些绘制功能？给我一份具体清单。",
+  "card_path": "references/capabilities/ccu-hdr-setup.md"
+ },
+ {
+  "case_id": "o18-ccu-genlock-sync-task",
+  "prompt": "ST2110 系统要用 NETWORK 同步，PTP 的域编号、通信模式、延迟请求间隔怎么配？锁定状态有哪几种？",
+  "card_path": "references/capabilities/ccu-genlock-sync.md"
+ },
+ {
+  "case_id": "o19-ccu-network-setup-task",
+  "prompt": "给 CCU 的 LAN1/LAN2 配 IP 和链路速度，LINK SPEED 和 25G FEC 有哪些取值？改完怎么确认生效？",
+  "card_path": "references/capabilities/ccu-network-setup.md"
+ },
+ {
+  "case_id": "o20-ccu-ip-live-task",
+  "prompt": "现场要接 NMOS 控制器，为什么 NMOS 的 PORT 选不了？另外 Ember+、TSL UMD、NMOS IS-04/IS-05、RDS 各自的端口号是多少？",
+  "card_path": "references/capabilities/ccu-ip-live.md"
+ },
+ {
+  "case_id": "o21-ccu-web-menu-task",
+  "prompt": "怎么启用 Web 菜单、用哪个浏览器、SERVICE DISCOVERY 怎么设？能连上但改不动是什么原因？",
+  "card_path": "references/capabilities/ccu-web-menu.md"
+ },
+ {
+  "case_id": "o22-ccu-file-log-task",
+  "prompt": "把 CCU 文件导出到 U 盘，路径是什么？RECALL 会不会把 LAN COM 的 IP 一起恢复？日志最多能存多久？",
+  "card_path": "references/capabilities/ccu-file-log.md"
+ },
+ {
+  "case_id": "o22b-ccu-file-log-boundary",
+  "prompt": "CCU 文件能不能跨型号恢复？从旧机导到新机导入失败了，排查步骤是什么？",
+  "card_path": "references/capabilities/ccu-file-log.md"
+ }
+]

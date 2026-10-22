@@ -1,0 +1,3 @@
+# 禁止 Git 做换行转换：BUILD_MANIFEST.json 里记录了文件 sha256，
+# 若检出时被改写为 CRLF，哈希会与实际文件不符。
+* -text
